@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<package>
+  <name>amcl_sewer</name>
+  <version>0.1.0</version>
+  <description>Adaptative Monte Carlo Localization (AMCL) for sewers</description>
+
+  <maintainer email="daletei@upo.es">David Alejo</maintainer>
+  
+  <license>BSD</license>
+
+  <author email="fcaballero@us.es">Fernando Caballero</author>
+  <author email="lmercab@upo.es">Luis Merino</author>
+
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>rospy</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>nav_msgs</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>tf</build_depend>
+  <build_depend>cmake_modules</build_depend>
+  <build_depend>libpcl-all-dev</build_depend>
+  <build_depend>pcl_ros</build_depend>
+  <build_depend>sewer_graph</build_depend>
+  <build_depend>simple_graph</build_depend>
+  <build_depend>gsll</build_depend>
+  <build_depend>plane_detector</build_depend>
+  <run_depend>pcl_ros</run_depend>
+  <run_depend>libpcl-all</run_depend>
+  <run_depend>roscpp</run_depend>
+  <run_depend>rospy</run_depend>
+  <run_depend>std_msgs</run_depend>
+  <run_depend>nav_msgs</run_depend>
+  <run_depend>tf</run_depend>
+  <run_depend>sewer_graph</run_depend>
+  <run_depend>simple_graph</run_depend>
+  <run_depend>gsll</run_depend>
+  <run_depend>plane_detector</run_depend>
+
+</package>

@@ -1,0 +1,91 @@
+<!--
+-->
+<launch>
+  <arg name="camera" default="/up"/>
+  <arg name="stats_file" default="~/stats_aux.txt"/>
+  <arg name="rgbd_odom" default="true"/>
+
+  # Launch RGB-D odom: TODO: necessary??
+  <node name="rgbd_odom_node" type="rgbd_odom_node" pkg="rgbd_odom" if="$(arg rgbd_odom)" >
+    <param name="camera_topic" value="$(arg camera)" />
+    <param name="tf_topic_out" value="/rgbd_odom/transform" />
+    <param name="max_features" value="800" />
+    <param name="flow_threshold" value="10" />
+    <param name="min_matches" value="15" />
+    <param name="odom_frame_id" value="odom" />
+    <param name="base_frame_id" value="base_link" />
+    <param name="publish_image" value="true" />
+    <param name="publish_point_cloud" value="true" />
+    <param name="use_sba" value="true" />
+    <param name="type_sba" value="1" />         # 0: MOTIONSTRUCTURE, 1: MOTION, 2: STRUCTURE (cvsba)
+    <param name="max_keyframes" value="10" />
+    <param name="use_imu" value="true" />
+    <param name="imu_topic" value="/arduimu_v3/imu" />
+    <param name="apply_downsampling" value="false" />
+    <param name="pc_downsampling" value="0.1" />
+    <param name="apply_crop" value="true" />
+    <param name="pc_crop_dist" value="7.0" />
+    <param name="apply_outlier" value="false" />
+    <param name="pc_outlier_radius" value="0.4" />
+    <param name="pc_outlier_neighbors" value="10" />
+    <param name="ground_height_topic" value="/ground_estimator_node/ground_height" />
+    <param name="ground_alpha" value="0.8" />
+  </node>
+  
+<!--   <node name="odom_to_tf" pkg="odom_to_tf" type="odom_to_tf.py"/> -->
+  
+  <node name="amcl_node" type="amcl_node" pkg="amcl_sewer" output="screen" >
+    <param name="rate" value="10.0" />
+    <param name="base_frame_id" value="base_link" />
+    <param name="odom_frame_id" value="odom" />
+    <param name="global_frame_id" value="map" />
+
+    <param name="min_particles" value="400" />
+    <param name="max_particles" value="500" />
+    
+    <param name="odom_x_mod" value="0.7" />
+    <param name="odom_y_mod" value="0.5" />
+    <param name="odom_a_mod" value="0.5" />
+    
+    <param name="resample_interval" value="0" />
+    
+    <param name="update_min_d" value="0.5" />
+    <param name="update_min_a" value="0.2" />
+    
+<!--     <param name="initial_x" value="3.0" /> NOTE: the inital position should be configured by hand by the operator-->
+<!--     <param name="initial_y" value="3.0" /> -->
+<!--     <param name="initial_a" value="0.73" /> -->
+    
+    <param name="initial_x_dev" value="0.5" />
+    <param name="initial_y_dev" value="0.3" />
+    <param name="initial_a_dev" value="0.2" />
+    
+    <param name="edgeDev" value="0.6"/>
+    <param name="manholeThres" value="0.0075"/>
+    <param name="manholeDev" value="0.6" />
+    <param name="min_manhole_detected" value="2"/>
+    <param name="forkDev" value="1.2"/>
+    <param name="fork_dist" value="3.0"/>
+    
+    <param name="sewer_graph_file" value="$(find sewer_graph)/test/gis_graph_reduced"/>
+    
+    <remap from="/amcl_sewer_node/initial_pose" to="/initialpose"/>
+    
+    <param name="stats_file" value="$(arg stats_file)"/>
+    <param name="initialize" value="false"/>
+    
+  </node>
+    
+<!--   <node name="vis" type="rviz" pkg="rviz" args="-d $(find amcl_sewer)/launch/amcl3d.rviz"/> -->
+  
+  <node name="cnn_laber" type="cnn_detector.py" pkg="manhole_detector" args="/up $(find manhole_detector)/test/model.10-0.9861-0.9578.hdf5" output="screen">
+    <param name="thres" value="0.65"/>
+  
+  </node>
+  
+<!--   <node name="ground_truth_laber" type="fake_detector.py" pkg="manhole_detector" args="/up $(find manhole_detector)/test/input_vector_2017-01-17-10_ground_truth" > -->
+<!--     <remap from="manhole" to="ground_truth"/> -->
+<!--   </node> -->
+<!--    -->
+
+</launch>	

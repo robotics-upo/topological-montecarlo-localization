@@ -1,0 +1,654 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+<Document>
+	<name>sewer_graph_3.kml</name>
+	<open>1</open>
+	<Style id="s_ylw-pushpin">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href>
+			</Icon>
+			<hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<LineStyle>
+			<color>ffff0000</color>
+			<width>6</width>
+		</LineStyle>
+	</Style>
+	<StyleMap id="msn_webcam">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_webcam1</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_webcam1</styleUrl>
+		</Pair>
+	</StyleMap>
+	<StyleMap id="msn_webcam0">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_webcam</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_webcam0</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Style id="sh_webcam">
+		<IconStyle>
+			<scale>1.4</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/shapes/webcam.png</href>
+			</Icon>
+			<hotSpot x="0.5" y="0" xunits="fraction" yunits="fraction"/>
+		</IconStyle>
+		<ListStyle>
+		</ListStyle>
+	</Style>
+	<Style id="sh_webcam0">
+		<IconStyle>
+			<scale>1.4</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/shapes/webcam.png</href>
+			</Icon>
+			<hotSpot x="0.5" y="0" xunits="fraction" yunits="fraction"/>
+		</IconStyle>
+		<ListStyle>
+		</ListStyle>
+	</Style>
+	<Style id="s_ylw-pushpin_hl">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href>
+			</Icon>
+			<hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<LineStyle>
+			<color>ffff0000</color>
+			<width>6</width>
+		</LineStyle>
+	</Style>
+	<Style id="sh_donut">
+		<IconStyle>
+			<scale>1.4</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/shapes/donut.png</href>
+			</Icon>
+		</IconStyle>
+		<ListStyle>
+		</ListStyle>
+	</Style>
+	<Style id="sh_webcam1">
+		<IconStyle>
+			<scale>1.4</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/shapes/webcam.png</href>
+			</Icon>
+			<hotSpot x="0.5" y="0" xunits="fraction" yunits="fraction"/>
+		</IconStyle>
+		<ListStyle>
+		</ListStyle>
+	</Style>
+	<Style id="sn_donut">
+		<IconStyle>
+			<scale>1.2</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/shapes/donut.png</href>
+			</Icon>
+		</IconStyle>
+		<ListStyle>
+		</ListStyle>
+	</Style>
+	<Style id="sn_ylw-pushpin">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href>
+			</Icon>
+			<hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<LineStyle>
+			<color>ff0000ff</color>
+			<width>6</width>
+		</LineStyle>
+	</Style>
+	<Style id="sn_donut0">
+		<IconStyle>
+			<scale>1.2</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/shapes/donut.png</href>
+			</Icon>
+		</IconStyle>
+		<ListStyle>
+		</ListStyle>
+	</Style>
+	<StyleMap id="msn_donut">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_donut</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_donut0</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Style id="sn_webcam">
+		<IconStyle>
+			<scale>1.2</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/shapes/webcam.png</href>
+			</Icon>
+			<hotSpot x="0.5" y="0" xunits="fraction" yunits="fraction"/>
+		</IconStyle>
+		<ListStyle>
+		</ListStyle>
+	</Style>
+	<StyleMap id="msn_donut0">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_donut0</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_donut</styleUrl>
+		</Pair>
+	</StyleMap>
+	<StyleMap id="msn_ylw-pushpin">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_ylw-pushpin</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_ylw-pushpin</styleUrl>
+		</Pair>
+	</StyleMap>
+	<StyleMap id="linestylemap">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#linestyle</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Style id="sn_webcam0">
+		<IconStyle>
+			<scale>1.2</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/shapes/webcam.png</href>
+			</Icon>
+			<hotSpot x="0.5" y="0" xunits="fraction" yunits="fraction"/>
+		</IconStyle>
+		<ListStyle>
+		</ListStyle>
+	</Style>
+	<Style id="sh_donut0">
+		<IconStyle>
+			<scale>1.4</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/shapes/donut.png</href>
+			</Icon>
+		</IconStyle>
+		<ListStyle>
+		</ListStyle>
+	</Style>
+	<StyleMap id="msn_webcam1">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_webcam0</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_webcam</styleUrl>
+		</Pair>
+	</StyleMap>
+	<StyleMap id="m_ylw-pushpin">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#s_ylw-pushpin</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#s_ylw-pushpin_hl</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Style id="sh_ylw-pushpin">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href>
+			</Icon>
+			<hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<LineStyle>
+			<color>ff0000ff</color>
+			<width>6</width>
+		</LineStyle>
+	</Style>
+	<Style id="sn_webcam1">
+		<IconStyle>
+			<scale>1.2</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/shapes/webcam.png</href>
+			</Icon>
+			<hotSpot x="0.5" y="0" xunits="fraction" yunits="fraction"/>
+		</IconStyle>
+		<ListStyle>
+		</ListStyle>
+	</Style>
+	<Placemark>
+		<name>0</name>
+		<styleUrl>#msn_donut</styleUrl>
+		<Point>
+			<coordinates>2.184226,41.38515,0</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark>
+		<name>Edge from 0 to 1</name>
+		<styleUrl>#linestylemap</styleUrl>
+		<LineString>
+			<coordinates>
+				2.184226,41.38515,0 2.184484,41.385339,0 
+			</coordinates>
+		</LineString>
+	</Placemark>
+	<Placemark>
+		<name>1</name>
+		<styleUrl>#msn_donut</styleUrl>
+		<Point>
+			<coordinates>2.184484,41.385339,0</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark>
+		<name>Edge from 1 to 17</name>
+		<styleUrl>#linestylemap</styleUrl>
+		<LineString>
+			<coordinates>
+				2.184484,41.385339,0 2.184745,41.385522,0 
+			</coordinates>
+		</LineString>
+	</Placemark>
+	<Placemark>
+		<name>2</name>
+		<styleUrl>#msn_donut</styleUrl>
+		<Point>
+			<coordinates>2.185026,41.385739,0</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark>
+		<name>Edge from 2 to 21</name>
+		<styleUrl>#linestylemap</styleUrl>
+		<LineString>
+			<coordinates>
+				2.185026,41.385739,0 2.18477310764994,41.3855459610294,0 
+			</coordinates>
+		</LineString>
+	</Placemark>
+	<Placemark>
+		<name>Edge from 2 to 18</name>
+		<styleUrl>#linestylemap</styleUrl>
+		<LineString>
+			<coordinates>
+				2.185026,41.385739,0 2.185177,41.385843,0 
+			</coordinates>
+		</LineString>
+	</Placemark>
+	<Placemark>
+		<name>3</name>
+		<styleUrl>#msn_donut</styleUrl>
+		<Point>
+			<coordinates>2.185068,41.385939,0</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark>
+		<name>Edge from 3 to 23</name>
+		<styleUrl>#linestylemap</styleUrl>
+		<LineString>
+			<coordinates>
+				2.185068,41.385939,0 2.18516755710406,41.3858639955909,0 
+			</coordinates>
+		</LineString>
+	</Placemark>
+	<Placemark>
+		<name>Edge from 3 to 4</name>
+		<styleUrl>#linestylemap</styleUrl>
+		<LineString>
+			<coordinates>
+				2.185068,41.385939,0 2.184833,41.386109,0 
+			</coordinates>
+		</LineString>
+	</Placemark>
+	<Placemark>
+		<name>4</name>
+		<styleUrl>#msn_donut</styleUrl>
+		<Point>
+			<coordinates>2.184833,41.386109,0</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark>
+		<name>Edge from 4 to 19</name>
+		<styleUrl>#linestylemap</styleUrl>
+		<LineString>
+			<coordinates>
+				2.184833,41.386109,0 2.18454877477974,41.3863326744572,0 
+			</coordinates>
+		</LineString>
+	</Placemark>
+	<Placemark>
+		<name>5</name>
+		<styleUrl>#msn_donut</styleUrl>
+		<Point>
+			<coordinates>2.18448428688879,41.3863296412499,0</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark>
+		<name>Edge from 5 to 6</name>
+		<styleUrl>#linestylemap</styleUrl>
+		<LineString>
+			<coordinates>
+				2.18448428688879,41.3863296412499,0 2.184296,41.386202,0 
+			</coordinates>
+		</LineString>
+	</Placemark>
+	<Placemark>
+		<name>Edge from 5 to 19</name>
+		<styleUrl>#linestylemap</styleUrl>
+		<LineString>
+			<coordinates>
+				2.18448428688879,41.3863296412499,0 2.18454877477974,41.3863326744572,0 
+			</coordinates>
+		</LineString>
+	</Placemark>
+	<Placemark>
+		<name>6</name>
+		<styleUrl>#msn_donut</styleUrl>
+		<Point>
+			<coordinates>2.184296,41.386202,0</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark>
+		<name>Edge from 6 to 7</name>
+		<styleUrl>#linestylemap</styleUrl>
+		<LineString>
+			<coordinates>
+				2.184296,41.386202,0 2.184149,41.386086,0 
+			</coordinates>
+		</LineString>
+	</Placemark>
+	<Placemark>
+		<name>7</name>
+		<styleUrl>#msn_donut</styleUrl>
+		<Point>
+			<coordinates>2.184149,41.386086,0</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark>
+		<name>Edge from 7 to 20</name>
+		<styleUrl>#linestylemap</styleUrl>
+		<LineString>
+			<coordinates>
+				2.184149,41.386086,0 2.184122,41.386037,0 
+			</coordinates>
+		</LineString>
+	</Placemark>
+	<Placemark>
+		<name>8</name>
+		<styleUrl>#msn_donut</styleUrl>
+		<Point>
+			<coordinates>2.184158,41.386011,0</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark>
+		<name>Edge from 8 to 9</name>
+		<styleUrl>#linestylemap</styleUrl>
+		<LineString>
+			<coordinates>
+				2.184158,41.386011,0 2.184373,41.385851,0 
+			</coordinates>
+		</LineString>
+	</Placemark>
+	<Placemark>
+		<name>Edge from 8 to 20</name>
+		<styleUrl>#linestylemap</styleUrl>
+		<LineString>
+			<coordinates>
+				2.184158,41.386011,0 2.184122,41.386037,0 
+			</coordinates>
+		</LineString>
+	</Placemark>
+	<Placemark>
+		<name>9</name>
+		<styleUrl>#msn_donut</styleUrl>
+		<Point>
+			<coordinates>2.184373,41.385851,0</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark>
+		<name>Edge from 9 to 10</name>
+		<styleUrl>#linestylemap</styleUrl>
+		<LineString>
+			<coordinates>
+				2.184373,41.385851,0 2.184659,41.38563,0 
+			</coordinates>
+		</LineString>
+	</Placemark>
+	<Placemark>
+		<name>10</name>
+		<styleUrl>#msn_donut</styleUrl>
+		<Point>
+			<coordinates>2.184659,41.38563,0</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark>
+		<name>Edge from 10 to 22</name>
+		<styleUrl>#linestylemap</styleUrl>
+		<LineString>
+			<coordinates>
+				2.184659,41.38563,0 2.18475404365609,41.385558902959,0 
+			</coordinates>
+		</LineString>
+	</Placemark>
+	<Placemark>
+		<name>11</name>
+		<styleUrl>#msn_donut</styleUrl>
+		<Point>
+			<coordinates>2.18406815870624,41.3860806869681,0</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark>
+		<name>Edge from 11 to 12</name>
+		<styleUrl>#linestylemap</styleUrl>
+		<LineString>
+			<coordinates>
+				2.18406815870624,41.3860806869681,0 2.183955,41.386167,0 
+			</coordinates>
+		</LineString>
+	</Placemark>
+	<Placemark>
+		<name>Edge from 11 to 20</name>
+		<styleUrl>#linestylemap</styleUrl>
+		<LineString>
+			<coordinates>
+				2.18406815870624,41.3860806869681,0 2.184122,41.386037,0 
+			</coordinates>
+		</LineString>
+	</Placemark>
+	<Placemark>
+		<name>12</name>
+		<styleUrl>#msn_donut</styleUrl>
+		<Point>
+			<coordinates>2.183955,41.386167,0</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark>
+		<name>Edge from 12 to 13</name>
+		<styleUrl>#linestylemap</styleUrl>
+		<LineString>
+			<coordinates>
+				2.183955,41.386167,0 2.18374,41.386334,0 
+			</coordinates>
+		</LineString>
+	</Placemark>
+	<Placemark>
+		<name>13</name>
+		<styleUrl>#msn_donut0</styleUrl>
+		<Point>
+			<coordinates>2.18374,41.386334,0</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark>
+		<name>Edge from 13 to 14</name>
+		<styleUrl>#linestylemap</styleUrl>
+		<LineString>
+			<coordinates>
+				2.18374,41.386334,0 2.18364,41.386403,0 
+			</coordinates>
+		</LineString>
+	</Placemark>
+	<Placemark>
+		<name>14</name>
+		<styleUrl>#msn_donut0</styleUrl>
+		<Point>
+			<coordinates>2.18364,41.386403,0</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark>
+		<name>Edge from 14 to 15</name>
+		<styleUrl>#linestylemap</styleUrl>
+		<LineString>
+			<coordinates>
+				2.18364,41.386403,0 2.183536,41.386482,0 
+			</coordinates>
+		</LineString>
+	</Placemark>
+	<Placemark>
+		<name>15</name>
+		<styleUrl>#msn_donut0</styleUrl>
+		<Point>
+			<coordinates>2.183536,41.386482,0</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark>
+		<name>Edge from 15 to 16</name>
+		<styleUrl>#linestylemap</styleUrl>
+		<LineString>
+			<coordinates>
+				2.183536,41.386482,0 2.183442,41.386567,0 
+			</coordinates>
+		</LineString>
+	</Placemark>
+	<Placemark>
+		<name>16</name>
+		<styleUrl>#msn_donut</styleUrl>
+		<Point>
+			<coordinates>2.183442,41.386567,0</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark>
+		<name>17</name>
+		<styleUrl>#msn_webcam0</styleUrl>
+		<Point>
+			<coordinates>2.184745,41.385522,0</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark>
+		<name>Edge from 17 to 21</name>
+		<styleUrl>#linestylemap</styleUrl>
+		<LineString>
+			<coordinates>
+				2.184745,41.385522,0 2.18477310764994,41.3855459610294,0 
+			</coordinates>
+		</LineString>
+	</Placemark>
+	<Placemark>
+		<name>Edge from 17 to 22</name>
+		<styleUrl>#linestylemap</styleUrl>
+		<LineString>
+			<coordinates>
+				2.184745,41.385522,0 2.18475404365609,41.385558902959,0 
+			</coordinates>
+		</LineString>
+	</Placemark>
+	<Placemark>
+		<name>18</name>
+		<styleUrl>#msn_webcam0</styleUrl>
+		<Point>
+			<coordinates>2.185177,41.385843,0</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark>
+		<name>Edge from 18 to 23</name>
+		<styleUrl>#linestylemap</styleUrl>
+		<LineString>
+			<coordinates>
+				2.185177,41.385843,0 2.18516755710406,41.3858639955909,0 
+			</coordinates>
+		</LineString>
+	</Placemark>
+	<Placemark>
+		<name>19</name>
+		<styleUrl>#msn_webcam</styleUrl>
+		<Point>
+			<coordinates>2.18454877477974,41.3863326744572,0</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark>
+		<name>20</name>
+		<styleUrl>#msn_webcam</styleUrl>
+		<Point>
+			<coordinates>2.184122,41.386037,0</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark>
+		<name>21</name>
+		<styleUrl>#msn_webcam0</styleUrl>
+		<Point>
+			<coordinates>2.18477310764994,41.3855459610294,0</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark>
+		<name>Edge from 21 to 22</name>
+		<styleUrl>#linestylemap</styleUrl>
+		<LineString>
+			<coordinates>
+				2.18477310764994,41.3855459610294,0 2.18475404365609,41.385558902959,0 
+			</coordinates>
+		</LineString>
+	</Placemark>
+	<Placemark>
+		<name>22</name>
+		<styleUrl>#msn_webcam0</styleUrl>
+		<Point>
+			<coordinates>2.18475404365609,41.385558902959,0</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark>
+		<name>23</name>
+		<styleUrl>#msn_webcam1</styleUrl>
+		<Point>
+			<coordinates>2.18516755710406,41.3858639955909,0</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark>
+		<name>Experiment 1</name>
+		<styleUrl>#m_ylw-pushpin</styleUrl>
+		<LineString>
+			<tessellate>1</tessellate>
+			<coordinates>
+				2.184248263104993,41.38513151697827,0 2.185248031909657,41.38586216126527,0 2.184518811005596,41.38639999130312,0 2.184040501342039,41.38606599810537,0 2.184709992831206,41.38555862879157,0 2.184179796281682,41.38519615865992,0 
+			</coordinates>
+		</LineString>
+	</Placemark>
+	<Placemark>
+		<name>Ruta sin título</name>
+		<styleUrl>#msn_ylw-pushpin</styleUrl>
+		<LineString>
+			<tessellate>1</tessellate>
+			<coordinates>
+				2.184225332149958,41.3851935751314,0 2.1848005684145,41.38559284473267,0 2.183778676314641,41.38633580378287,0 
+			</coordinates>
+		</LineString>
+	</Placemark>
+</Document>
+</kml>

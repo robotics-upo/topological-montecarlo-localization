@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package>
+  <name>localization_siar</name>
+  <version>0.0.0</version>
+  <description>The localiztion package of SIAR </description>
+
+ 
+  <maintainer email="daletei@upo.es">David Alejo Teissière</maintainer>
+
+  <license>BSD</license>
+  
+  <author email="fcaballero@us.es">Fernando Caballero Benitez</author>
+  <author email="lmercab@upo.es">Luis Merino Cabañas</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <export>
+    <metapackage/>
+  </export>
+</package>

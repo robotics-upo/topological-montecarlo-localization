@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<package>
+  <name>sewer_graph</name>
+  <version>0.0.0</version>
+  <description>This module is responible for coordinating the trajectories of UAVs in the system</description>
+
+  <maintainer email="daletei@upo.es">David Alejo Teissière</maintainer>
+
+  <author email="fcaballero@us.es">Fernando Caballero Benitez</author>
+  <author email="lmercab@upo.es">Luis Merino Cabañas</author>
+  
+  <license>BSD</license>
+  <buildtool_depend>catkin</buildtool_depend>
+  
+  <build_depend>roscpp</build_depend>
+  <build_depend>rosconsole</build_depend>
+  <build_depend>functions</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>simple_graph</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>visualization_msgs</build_depend>
+  
+  
+  <run_depend>roscpp</run_depend>
+  <run_depend>functions</run_depend>
+  <run_depend>geometry_msgs</run_depend>
+  <run_depend>rosconsole</run_depend>
+  <run_depend>simple_graph</run_depend>
+  <run_depend>std_msgs</run_depend>
+  <run_depend>visualization_msgs</run_depend>
+
+</package>
