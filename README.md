@@ -1,4 +1,4 @@
-# localization_siar
+# topological-montecarlo-localization
 
 This metapackage contains most of the development for localization of the SIAR platform inside a sewer network. 
 
