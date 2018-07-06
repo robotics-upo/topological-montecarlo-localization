@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-  <name>localization_siar</name>
+  <name>topological-montecarlo-localization</name>
   <version>0.0.0</version>
   <description>The localiztion package of SIAR </description>
 
