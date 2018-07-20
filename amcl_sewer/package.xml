@@ -2,7 +2,7 @@
 <package>
   <name>amcl_sewer</name>
   <version>0.1.0</version>
-  <description>Adaptative Monte Carlo Localization (AMCL) for sewers</description>
+  <description>Monte Carlo Localization (AMCL) in topological maps</description>
 
   <maintainer email="daletei@upo.es">David Alejo</maintainer>
   

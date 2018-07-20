@@ -23,7 +23,7 @@
 #include <math.h>
 #include <sewer_graph/sewer_graph.h>
 #include <fstream>
-#include <plane_detector/WallInfo.h>
+#include <wall_detector/WallInfo.h>
 #include <cmath>
 
 //Struct that contains the data concerning one Particle
@@ -368,7 +368,7 @@ private:
     manhole_hist.push_back(msg->data);
   }
   
-  void wallInfoCallback(const plane_detector::WallInfoConstPtr &msg) {
+  void wallInfoCallback(const wall_detector::WallInfoConstPtr &msg) {
     last_info = *msg;
     last_relative_time = ros::Time::now();
     ROS_INFO("Catched angle measurement. Angle = %f", msg->angle);
@@ -781,7 +781,7 @@ private:
   int m_resampleInterval;
   
   //! Yaw estimation
-  plane_detector::WallInfo last_info;
+  wall_detector::WallInfo last_info;
   ros::Time last_relative_time;
   double angular_weight;
   

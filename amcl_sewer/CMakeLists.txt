@@ -30,7 +30,7 @@ pkg_check_modules( gsl REQUIRED gsl )
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES stereo_processing
- CATKIN_DEPENDS roscpp rospy std_msgs pcl_ros nav_msgs tf sewer_graph simple_graph gsll
+ CATKIN_DEPENDS roscpp rospy std_msgs pcl_ros nav_msgs tf sewer_graph simple_graph gsll plane_detector
 #  DEPENDS system_lib
 )
 
@@ -56,7 +56,7 @@ add_executable(amcl_node src/amcl_node.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
-add_dependencies(amcl_node plane_detector_generate_messages_cpp)
+add_dependencies(amcl_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(amcl_node
