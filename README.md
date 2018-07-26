@@ -37,4 +37,5 @@ In order to build the package, clone it inside the *src* directory of your Catki
 - Rgbd-odom package. Can be downloaded from: https://github.com/robotics-upo/rgbd_odom.git
 - Keras python library (https://keras.io/) for neural networks. *Please refer to the README.md of manhole_detector package* for its correct configuration.
 - Function ROS package. https://github.com/robotics-upo/functions
+- Plane detector package. https://github.com/robotics-upo/plane_detector
 
