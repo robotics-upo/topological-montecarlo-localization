@@ -26,6 +26,7 @@
   <build_depend>simple_graph</build_depend>
   <build_depend>gsll</build_depend>
   <build_depend>plane_detector</build_depend>
+  <build_depend>wall_detector</build_depend>
   <run_depend>pcl_ros</run_depend>
   <run_depend>libpcl-all</run_depend>
   <run_depend>roscpp</run_depend>
@@ -37,5 +38,6 @@
   <run_depend>simple_graph</run_depend>
   <run_depend>gsll</run_depend>
   <run_depend>plane_detector</run_depend>
+  <run_depend>wall_detector</run_depend>
 
 </package>
