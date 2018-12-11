@@ -8,7 +8,7 @@ using namespace sewer_graph;
 
 int main(int argc, char ** argv) {
   if (argc < 2) {
-    cerr << "Usage: " << argv[0] << " <in_filename> [<out_filename>] [<output_kml_file>]\n";
+    cerr << "Usage: " << argv[0] << " <in_filename> [<out_filename>] [<output_kml_file>] [something if exporting kml only_manhole]\n";
     return -1;
   }
   string s(argv[1]);
@@ -26,7 +26,13 @@ int main(int argc, char ** argv) {
   if (argc > 3) {
     string kml_file(argv[3]);
     cout << "Exporting KML file to " << kml_file << endl;
-    g.exportKMLFile(kml_file);
+    
+    if (argc > 4) {
+      g.exportKMLFile(kml_file, sewer_graph::MANHOLE);
+      cout << "Exporting only manholes to KML\n";
+    } else {
+      g.exportKMLFile(kml_file);
+    }
   }
   
   ros::init(argc, argv, "test_sewer");

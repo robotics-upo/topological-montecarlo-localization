@@ -64,7 +64,7 @@ set(geotranz_include /usr/include/geotranz/dtcc/CoordinateSystems/ /usr/include/
 
 include_directories(include ${catkin_INCLUDE_DIRS} ${geotranz_include} )
 
-SET(FP_SOURCE src/earthlocation.cpp src/general.cpp src/sewer_graph.cpp) 
+SET(FP_SOURCE src/earthlocation.cpp src/general.cpp src/sewer_graph.cpp src/trajectory.cpp) 
 SET(LIBS ${catkin_LIBRARIES} kmlbase kmldom kmlengine kmlconvenience dxflib geotranz)
 
 add_library(sewer_graph ${FP_SOURCE}
@@ -85,6 +85,10 @@ target_link_libraries(dxf_to_sewer_graph ${PROJECT_NAME} ${LIBS})
 
 add_executable(get_results src/exec/get_results.cpp)
 target_link_libraries(get_results ${PROJECT_NAME} ${LIBS})
+
+# Export local trajectories to kml
+add_executable(local2global src/exec/local2global.cpp)
+target_link_libraries(local2global ${PROJECT_NAME} ${LIBS})
  
  ## Mark executables and/or libraries for installation
 install(TARGETS sewer_graph

@@ -26,7 +26,6 @@
 #include <sstream>
 #include <math.h>
 
-#ifdef USE_KML
 
 #include <kml/engine.h>
 #include <kml/convenience/convenience.h>
@@ -39,7 +38,7 @@ using kmldom::CoordinatesPtr;
 using kmldom::KmlPtr;
 using kmlengine::KmlFile;
 using kmlengine::KmlFilePtr;
-#endif
+
 using namespace std;
 using functions::DegMinSec;
 using functions::RealVector;
@@ -67,13 +66,11 @@ EarthLocation::EarthLocation(const std::string& filename)
   init();
 	init(filename);
 }
-#ifdef USE_KML
 EarthLocation::EarthLocation(kmldom::ElementPtr e)
 {
   init();
   init(e);
 }
-#endif
 
 
 void EarthLocation::init(double lat, double lon, double alt, double time, double yaw, double roll, double pitch)
@@ -319,7 +316,6 @@ string EarthLocation::toMatlab(const EarthLocation &center) const
   
   return os.str();
 }
-#ifdef USE_KML
 //! TODO: include the orientation and altitude (create placemarks with model geometry)
 kmldom::PlacemarkPtr EarthLocation::getKMLPlacemark(const string &name) const
 {
@@ -346,8 +342,6 @@ PlacemarkPtr EarthLocation::getKMLLine(const string& name, const EarthLocation& 
     
   return ret;
 }
-
-#endif
 
 EarthLocation EarthLocation::interpolate(const EarthLocation &post, double time) {
   EarthLocation ret = *this;
@@ -384,9 +378,15 @@ functions::RealVector EarthLocation::toRelative(const EarthLocation& center, boo
   return ret; 
 }
 
-void EarthLocation::fromRelative(const vector<double>& v, EarthLocation& e, bool reverse)
+void EarthLocation::fromRelative(const vector< double >& v_, const sewer_graph::EarthLocation& e, bool reverse)
 {
   *this = e;
+  vector <double> v = v_;
+  if (v.size() < 2) 
+    return;
+  if (v.size() == 2) {
+    v.push_back(0);
+  }
   if (reverse) {
     shift(v.at(1), v.at(0), v.at(2));
   } else {

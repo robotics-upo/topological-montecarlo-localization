@@ -146,19 +146,36 @@ void WallDetector::detectWalls(const sensor_msgs::Image &img)
     
   } 
   
-  if (wall_planes.size() != 2) {
+  wall_detector::WallInfo w_info;
+  if (wall_planes.size() != 2 && wall_planes.size() != 1) {
     ROS_INFO("Detected %lu wall planes --> not taking decisions", wall_planes.size());
     // Publish wrong info (distances cannot be less than zero)
-    wall_detector::WallInfo w_info;
+    
     w_info.d_left = -1.0;
     w_info.d_right = -1.0;
     w_info.angle = -1.0;
     wall_info_pub.publish(w_info);
     return;
   }
+  DetectedPlaneROS p_left(wall_planes.at(0));
+  if (wall_planes.size() == 1) {
+    marker_pub.publish(p_left.getMarker(link_1, 0, _color.at(0)));
+    w_info.d_left = -1.0;
+    w_info.d_right = -1.0;
+    w_info.angle = -1.0;
+    if (p_left.v.dot(v_y)) {
+      w_info.d_left = p_left.d;
+    } else {
+      w_info.d_right = p_left.d;
+    }
+    w_info.angle = angle_1;
+    wall_info_pub.publish(w_info);
+    
+    return;
+  }
   
   // Print the distances  (TODO: orientation)
-  DetectedPlaneROS p_left(wall_planes.at(0));
+  
   DetectedPlaneROS p_right(wall_planes.at(1));
   
   if (p_left.v.dot(v_y) < 0) {
@@ -173,7 +190,6 @@ void WallDetector::detectWalls(const sensor_msgs::Image &img)
   marker_pub.publish(p_left.getMarker(link_1, 0, _color.at(0)));
   marker_pub.publish(p_right.getMarker(link_1, 1, _color.at(1)));
   
-  wall_detector::WallInfo w_info;
   w_info.d_left = p_left.d;
   w_info.d_right = p_right.d;
   w_info.angle = (angle_1 + angle_2) * 0.5;

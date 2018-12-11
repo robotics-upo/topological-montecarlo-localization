@@ -2,10 +2,7 @@
 #define SEWER_GRAPH_H
 
 #include <string>
-#include "config.h"
-#ifdef USE_KML
 #include <kml/dom.h>
-#endif
 
 #include "functions/DegMinSec.h"
 #include "functions/RealVector.h"
@@ -92,7 +89,7 @@ public:
   //! @param filename Output filename
   //! @retval true The information has been successfully saved
   //! @retval false Errors while saving information
-  bool exportKMLFile(const std::string &filename) const;
+  bool exportKMLFile(const string& filename, sewer_graph::SewerVertexType type = ALL) const;
   
   //! Grief Exports the Graph in RViz format
   std::vector<visualization_msgs::Marker> getMarkers(std::string ref_frame) const;
@@ -110,11 +107,9 @@ public:
 protected:
   EarthLocation center;
   // KML stuff -------------------------------------------------
-#ifdef USE_KML  
   kmldom::KmlFactory* factory;
   
   void addKMLStyle(kmldom::DocumentPtr& doc) const;
-#endif
   // End of KML stuff -----------------------------------------------
   
   //! @brief Parses the type: the thousand digit indicates: if 0 --> T. if 1 --> D, if 2 --> NT

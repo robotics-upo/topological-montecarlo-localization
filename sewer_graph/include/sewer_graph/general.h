@@ -1,10 +1,7 @@
 #ifndef ______GENERAL__H______
 #define ______GENERAL__H______
 
-#include "config.h"
-#ifdef USE_KML
-  #include <kml/dom.h>
-#endif
+#include <kml/dom.h>
 #include <string>
 
 namespace sewer_graph {

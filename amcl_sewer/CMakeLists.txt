@@ -30,7 +30,7 @@ pkg_check_modules( gsl REQUIRED gsl )
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES stereo_processing
- CATKIN_DEPENDS roscpp rospy std_msgs pcl_ros nav_msgs tf sewer_graph simple_graph gsll plane_detector
+ CATKIN_DEPENDS roscpp rospy std_msgs pcl_ros nav_msgs tf sewer_graph simple_graph plane_detector
 #  DEPENDS system_lib
 )
 

@@ -5,7 +5,6 @@
 
 #include <ros/ros.h>
 
-#ifdef USE_KML
 #include "kml/base/file.h"
 #include "kml/base/math_util.h"
 #include "kml/dom.h"
@@ -20,7 +19,6 @@ using kmldom::PlacemarkPtr;
 using kmldom::KmlPtr;
 using kmlengine::KmlFile;
 using kmlengine::KmlFilePtr;
-#endif
 
 using namespace std;
 using namespace functions;
@@ -279,7 +277,7 @@ double SewerGraph::getDistanceToClosestEdge(double x, double y, int &id1, int &i
 
 // ----------------- Representation stuff -------------------------------------
 
-bool SewerGraph::exportKMLFile(const string& filename) const 
+bool SewerGraph::exportKMLFile(const string& filename, SewerVertexType type) const 
 {
   bool ret = true;
   
@@ -292,8 +290,14 @@ bool SewerGraph::exportKMLFile(const string& filename) const
   for (unsigned int i = 0; i < nVertices(); i++) {
     EarthLocation from = getVertexContent(i).e;
     ostringstream os;
-    os << "Vertex " << i;
-    doc->add_feature(from.getKMLPlacemark(os.str()));  // kml takes ownership.
+    if (getVertexContent(i).type == MANHOLE)
+      os << "MH " << i;
+    else
+      os << "Vertex " << i;
+    
+    if (getVertexContent(i).type == type || type == ALL) { //  Only add the vertices that coincide with the type
+      doc->add_feature(from.getKMLPlacemark(os.str()));  // kml takes ownership. (do not free)
+    }
     
     // Then iterate the edges
     std::list<int> n = vertices[i].getNeighbours();

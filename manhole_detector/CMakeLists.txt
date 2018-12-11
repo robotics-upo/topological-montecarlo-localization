@@ -25,7 +25,7 @@ catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES manhole_labeler
  CATKIN_DEPENDS rosbag roscpp rospy sensor_msgs std_msgs compressed_depth_image_transport   cv_bridge   dynamic_reconfigure   image_transport functions
-#  DEPENDS system_lib
+ DEPENDS OpenCV
 )
 
 ###########

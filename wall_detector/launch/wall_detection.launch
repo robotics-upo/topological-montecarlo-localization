@@ -21,13 +21,13 @@
   
   # Launch plane detector
   <node name="test_wall_detector" type="test_wall_detector" pkg="plane_detector" output="screen" >
-   <param name="camera" value="$(arg camera)/depth_registered"/>
+   <param name="camera" value="$(arg camera)"/>
    <param name="link_1" value="$(arg robot_frame)"/>
    <param name="link_2" value="$(arg camera)_depth_optical_frame"/>
   </node>
   
   <node name="test_floor_detector" type="test_floor_detector" pkg="plane_detector" output="screen" >
-   <param name="camera" value="$(arg camera)/depth_registered"/>
+   <param name="camera" value="$(arg camera)"/>
    <param name="link_1" value="$(arg robot_frame)"/>
    <param name="link_2" value="$(arg camera)_depth_optical_frame"/>
   </node>

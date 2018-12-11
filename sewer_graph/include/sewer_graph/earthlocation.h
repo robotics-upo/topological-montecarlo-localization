@@ -151,7 +151,7 @@ class EarthLocation
 		//! @return A vector whose first component is the north deviation, second the east deviation and finally the altitude (m)
 		functions::RealVector toRelative(const EarthLocation &center, bool reverse = true) const;
                 
-		void fromRelative(const std::vector<double> &v, EarthLocation &e, bool reverse = true);
+		void fromRelative(const std::vector< double >& v_, const sewer_graph::EarthLocation& e, bool reverse = true);
 		
 	protected:
 		double lon; // Stores the longitude in degrees
