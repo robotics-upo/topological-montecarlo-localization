@@ -21,11 +21,12 @@ find_package(catkin REQUIRED COMPONENTS
   visualization_msgs
   nav_msgs
   plane_detector
+  wall_detector
 )
 
 # GSL package
-find_package( PkgConfig REQUIRED)
-pkg_check_modules( gsl REQUIRED gsl )
+# find_package( PkgConfig REQUIRED)
+# pkg_check_modules( gsl REQUIRED gsl )
 
 catkin_package(
 #  INCLUDE_DIRS include
