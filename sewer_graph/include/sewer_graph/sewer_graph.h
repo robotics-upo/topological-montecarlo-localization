@@ -67,6 +67,8 @@ public:
   //! @brief Loads graph from a file
   bool loadGraph(const std::string &filename);
   
+  bool loadLocalGraph(const std::string &filename, double lat, double lon);
+  
   bool writeGraph(const std::string &filename);
   
   virtual void addEdge(int i, int j);

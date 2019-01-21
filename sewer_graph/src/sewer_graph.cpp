@@ -124,6 +124,62 @@ bool SewerGraph::loadGraph(const string& filename)
   return ret_val;
 }
 
+bool SewerGraph::loadLocalGraph(const string& filename, double lat, double lon)
+{
+  bool ret_val = true;
+  Matrix info;
+  
+  EarthLocation e(lat, lon);
+  center = e; // Initialize the center as the first loaded vertex
+  
+  try {
+    getMatrixFromFile(filename, info);
+    unsigned int i;
+    for (i = 0; i < info.size(); i++) {
+      if (info[i].size() < 2) {
+        break; // Node ID invalid --> lets get the Edges
+      }
+      
+      
+      SewerVertex v;
+      v.e.fromRelative(info[i], center);    
+      v.x = info[i][0];
+      v.y = info[i][1];
+      
+      if (info[i].size() > 2) {
+        v.type = (SewerVertexType)info[i][2];
+      } else {
+        v.type = MANHOLE;
+      }
+      
+      v.comments = "";
+      addVertex(v);
+    }
+    
+    for (;i < info.size(); i++) {
+      if (info[i].size() == 2) {
+//         cout << "Adding edge: " << info[i][0] << " to " << info[i][1] << "\t";
+        addEdge(info[i][0], info[i][1]);
+        
+        
+      } else if (info[i].size() == 3) {
+        addEdge(info[i][0], info[i][1], info[i][2]);
+        
+      } else if (info[i].size() >= 4) {
+        addEdge(info[i][0], info[i][1], info[i][2], info[i][3]);
+        
+      }
+      
+    }
+    
+  } catch (std::exception &e) {
+    cerr << "Sewer::loadGraph --> Error while loading file: " << filename << "\n";
+    
+  }
+  
+  return ret_val;
+}
+
 void SewerGraph::addEdge(int i, int j) {
   SewerEdge e;
   EarthLocation origin(getVertexContent(i).e);

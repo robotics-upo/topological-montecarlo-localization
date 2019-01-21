@@ -10,6 +10,8 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   sensor_msgs
   std_msgs
+  geometry_msgs
+  message_generation
   compressed_depth_image_transport
   cv_bridge
   dynamic_reconfigure
@@ -21,10 +23,24 @@ find_package(catkin REQUIRED COMPONENTS
 find_package(Boost REQUIRED)
 find_package(OpenCV REQUIRED)
 
+## Generate messages in the 'msg' folder
+add_message_files(
+  FILES
+  Manhole.msg
+)
+
+## Generate added messages and services with any dependencies listed here
+generate_messages(
+  DEPENDENCIES
+  std_msgs
+  geometry_msgs
+  sensor_msgs
+)
+
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES manhole_labeler
- CATKIN_DEPENDS rosbag roscpp rospy sensor_msgs std_msgs compressed_depth_image_transport   cv_bridge   dynamic_reconfigure   image_transport functions
+ CATKIN_DEPENDS rosbag roscpp rospy sensor_msgs std_msgs geometry_msgs compressed_depth_image_transport   message_generation message_runtime cv_bridge   dynamic_reconfigure   image_transport functions
  DEPENDS OpenCV
 )
 
@@ -41,6 +57,8 @@ include_directories(
 
 ## Declare a C++ executable
 add_executable(generate_dataset src/generate_dataset_learning.cpp)
+
+add_dependencies(generate_dataset ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(generate_dataset

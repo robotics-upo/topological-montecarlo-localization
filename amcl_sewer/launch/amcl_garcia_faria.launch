@@ -27,10 +27,9 @@
     <param name="initial_y_dev" value="1.0" />
     <param name="initial_a_dev" value="0.5" />
     
-    <param name="initial_x" value="192.33833313" />-
-
-    <param name="initial_y" value="-142.062469482" />
-    <param name="initial_a" value="2.580" />
+    <param name="initial_x" value="-191.8" />
+    <param name="initial_y" value="-142.06" />
+    <param name="initial_a" value="0.8" />
     
     <param name="edgeDev" value="1.2"/>
     <param name="manholeThres" value="0.075"/>
@@ -45,7 +44,7 @@
     <remap from="/amcl_sewer_node/initial_pose" to="/initialpose"/>
     
     <param name="stats_file" value="$(arg stats_file)"/>
-    <param name="initialize" value="false"/>
+    <param name="initialize" value="true"/>
     
   </node>
     

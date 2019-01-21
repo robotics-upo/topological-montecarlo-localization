@@ -25,6 +25,7 @@
 #include <fstream>
 #include <wall_detector/WallInfo.h>
 #include <cmath>
+#include <manhole_detector/Manhole.h>
 
 //Struct that contains the data concerning one Particle
 struct Particle
@@ -160,7 +161,8 @@ public:
     // Launch subscribers
     m_detect_manhole_Sub = m_nh.subscribe(m_detectManholeTopic, 1, &ParticleFilter::manholeDetectedCallback, this);
     m_initialPoseSub = m_nh.subscribe(node_name+"/initial_pose", 2, &ParticleFilter::initialPoseReceived, this);
-    wall_info_sub = m_nh.subscribe("/wall_info", 1, &ParticleFilter::wallInfoCallback, this);
+    m_wall_info_sub = m_nh.subscribe("/wall_info", 1, &ParticleFilter::wallInfoCallback, this);
+    m_ground_sub = m_nh.subscribe("/ground_truth", 2, &ParticleFilter::manholeDetectedCallback, this);
     
     // Launch publishers
     m_posesPub = m_nh.advertise<geometry_msgs::PoseArray>(node_name+"/particle_cloud", 1, true);
@@ -373,6 +375,13 @@ private:
     last_relative_time = ros::Time::now();
     ROS_INFO("Catched angle measurement. Angle = %f", msg->angle);
   }
+
+  void groundCallback(const manhole_detector::ManholeConstPtr &msg) {
+     ground = *msg;
+     updateParticles(5);
+
+  
+  }
   
   void update(bool detected_manhole) {
     
@@ -505,21 +514,24 @@ private:
       // Evaluate the weight of the range sensors
       
       switch (mode) {
-	case 1:
-	  m_p[i].w = computeManholeWeight(tx, ty);
-	  break;
-	case 2:
-	  m_p[i].w = computeForkWeight(tx, ty);
-	  break;
-	case 3:
-	  m_p[i].w = computeAngularWeight(tx, ty, ta);
-	  break;
-	case 4:
-	  m_p[i].w = computeEdgeWeight(tx, ty);
-	  m_p[i].w += angular_weight * computeAngularWeight(tx, ty, ta);
-	  break;
-	default:
-	  m_p[i].w = computeEdgeWeight(tx, ty); // Compute weight as a function of the distance to the closest edge
+        case 1:
+          m_p[i].w = computeManholeWeight(tx, ty);
+          break;
+        case 2:
+          m_p[i].w = computeForkWeight(tx, ty);
+          break;
+        case 3:
+          m_p[i].w = computeAngularWeight(tx, ty, ta);
+          break;
+        case 4:
+          m_p[i].w = computeEdgeWeight(tx, ty);
+          m_p[i].w += angular_weight * computeAngularWeight(tx, ty, ta);
+          break;
+        case 5:
+          m_p[i].w = computeGroundTruthWeight(tx, ty, ground.local_pose.x, ground.local_pose.y);  
+          break;
+        default:
+          m_p[i].w = computeEdgeWeight(tx, ty); // Compute weight as a function of the distance to the closest edge
       }
         
       //Increase the summatory of weights
@@ -550,6 +562,11 @@ private:
   
   double computeManholeWeight(double x, double y) {
     double dist = s_g->getDistanceToClosestManhole(x, y);
+    return manholeConst1*exp(-dist*dist*manholeConst2) + m_manholeThres;
+  }
+
+  double computeGroundTruthWeight(double x, double y, double g_x, double g_y) {
+    double dist = sqrt( (x-g_x)*(x-g_x) + (y-g_y)*(y-g_y));
     return manholeConst1*exp(-dist*dist*manholeConst2) + m_manholeThres;
   }
   
@@ -804,7 +821,7 @@ private:
   ros::NodeHandle m_nh;
   tf::TransformBroadcaster m_tfBr;
   tf::TransformListener m_tfListener;
-  ros::Subscriber m_detect_manhole_Sub, m_initialPoseSub, m_odomTfSub, wall_info_sub;
+  ros::Subscriber m_detect_manhole_Sub, m_initialPoseSub, m_odomTfSub, m_wall_info_sub, m_ground_sub;
   ros::Publisher m_posesPub, m_graphPub, m_gpsPub, m_posecovPub;
   ros::Timer updateTimer;
   
@@ -825,6 +842,8 @@ private:
   double manholeConst1, manholeConst2;
   double angleConst1, angleConst2;
   double m_forkDev, forkConst1, forkConst2, m_fork_dist;
+
+  manhole_detector::Manhole ground; // Store the ground truth data
   
   //For saving trajetory
   std::ofstream traj_file;
