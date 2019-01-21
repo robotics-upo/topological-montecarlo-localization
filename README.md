@@ -17,7 +17,6 @@ The bags for reproducing the presented experiments can be found at:
 It is composed by the following packages:
 
 * *amcl_sewer* A customized version of the popular AMCL algorithm adapted to the particularities of the sewer network.
-* *functions* Some general-purpose functions and classes regarding to file management, handling with RealVectors and many more
 * *manhole_detector* A keras-based CNN detector trained with over 19k images for detecting manholes with the up-facing camera of the robot
 * *sewer_graph* Uses the simple_graph library to acquire the sewer network topology from file and store it in memory
 * *simple_graph* A lightweight library for storing sparse graphs
