@@ -4,6 +4,7 @@
 #include "functions/functions.h"
 #include <vector>
 #include <iostream>
+#include <stdexcept>
 
 #ifdef USE_KML
 #include "kml/base/file.h"

@@ -64,7 +64,7 @@ odom_x_mod=0.1
 CONTADOR=$1
 directory_out=/home/chur/stats/stats21_sept_yaw_wheel_mod_${odom_x_mod}_mod_a_${odom_a_mod}_noise_${odom_a_mod}
 mkdir -p $directory_out
-cd /home/chur/test_ws/src/siar_packages/localization_siar/amcl_sewer/launch
+cd /home/chur/test_ws/src/topological-montecarlo-localization/amcl_sewer/launch
 cp amcl_bag.launch $directory_out
 cd ../scripts
 cp experiment_full_track_vo_vs_wheel.sh $directory_out

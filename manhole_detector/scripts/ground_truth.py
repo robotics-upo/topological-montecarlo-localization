@@ -6,6 +6,7 @@ import rospy
 import fileinput
 from manhole_detector.msg import Manhole
 from sensor_msgs.msg import CompressedImage
+from geometry_msgs.msg import PoseWithCovarianceStamped
 from tf.transformations import euler_from_quaternion, quaternion_from_euler
 import numpy as np
 import sys
@@ -25,7 +26,6 @@ class GroundTruth:
     #print "RGB Callback. Seq: %d"%seq
     msg_mh = Manhole
     
-    pose_msg = Pose2D(float('nan'), float('nan'), float('nan'))
     
     for i in range(len(self.detected_vector)):
       if self.detected_vector[i][0] <= seq and self.detected_vector[i][1] >= seq:
@@ -40,18 +40,17 @@ class GroundTruth:
           # save a file with the distance to the manhole
           try:
             (trans,rot) = self.listener.lookupTransform('/map', '/base_link', rospy.Time(0))
-            dist = math.sqrt( (trans[0] - pose_msg.x) ** 2 + (trans[1] - pose_msg.y) ** 2)
+            dist = math.sqrt( (trans[0] - msg_mh.local_pose.x) ** 2 + (trans[1] - msg_mh.local_pose.y) ** 2)
             (roll, pitch, yaw) = euler_from_quaternion(rot)
-            text_ = '{0}  \t \t  {1} {2} {3} \t \t {4} {5} \t \t {6}\t{7} {8} {9} {10}\n'.format(id_msg.data, trans[0], trans[1], yaw, pose_msg.x, pose_msg.y, dist, self.varx, self.vary, self.vara, self.covarxy)
+            text_ = '{0}  \t \t  {1} {2} {3} \t \t {4} {5} \t \t {6}\t{7} {8} {9} {10}\n'.format(msg_mh.id, trans[0], trans[1], yaw, msg_mh.local_pose.x, msg_mh.local_pose.y, dist, self.varx, self.vary, self.vara, self.covarxy)
             
             self.stats_file.write(text_)
             print "Writed to file:{0}".format(text_)
           except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
             print "Exception catched while waiting for transform"
         break
-    self.bool_pub.publish(bool_msg)
-    self.id_pub.publish(id_msg)
-    self.pose_pub.publish(pose_msg)
+    self.bool_pub.publish(msg_mh)
+    
     
   def __init__(self, camera, filename, out_file):
     self.load_vector(filename)
