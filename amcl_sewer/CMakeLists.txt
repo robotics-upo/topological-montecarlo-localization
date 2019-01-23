@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(amcl_sewer)
 
-set (CMAKE_BUILD_TYPE Debug)
+set (CMAKE_BUILD_TYPE Release)
+
+set (CMAKE_CXX_FLAGS -std=c++11)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)

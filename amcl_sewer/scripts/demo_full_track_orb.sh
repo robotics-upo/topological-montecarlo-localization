@@ -26,7 +26,7 @@ odom_x_mod=0.4
 
 # # With yaw estimation --> yaw_estimator --> true
 CONTADOR=$1
-directory_out=/home/chur/stats/stats17_oct_wheel_mod_${odom_x_mod}_mod_a_${odom_a_mod}_noise_${odom_a_noise}
+directory_out=/home/chur/stats/stats17_oct_orb_${odom_x_mod}_mod_a_${odom_a_mod}_noise_${odom_a_noise}
 mkdir -p $directory_out
 cd /home/chur/test_ws/src/topological-montecarlo-localization/amcl_sewer/launch
 cp amcl_bag.launch $directory_out
@@ -34,7 +34,7 @@ cd ../scripts
 cp $0 $directory_out
 until [ $CONTADOR -gt $2 ]; do
   # Roslaunch with multiple parameters
-  roslaunch amcl_sewer amcl_bag.launch play_bag:=false ground_truth:=$ground_file \
+  roslaunch amcl_sewer amcl_bag_orb.launch play_bag:=false ground_truth:=$ground_file \
   ground_truth_out:=${directory_out}/stats_$CONTADOR.txt \
   yaw_estimator:=false \
   odom_a_mod:=$odom_a_mod odom_a_noise:=$odom_a_noise odom_x_mod:=$odom_x_mod odom_y_mod:=$odom_x_mod \
@@ -43,7 +43,7 @@ until [ $CONTADOR -gt $2 ]; do
   #end of roslaunch
   
   let pid1=$!
-  rosbag play $bag_file -s $start --clock -r 2
+  rosbag play $bag_file -s $start --clock -r 1
   rosnode kill -a
   wait ${pid1}
   let CONTADOR+=1

@@ -21,21 +21,22 @@ ground_file=/home/chur/Dataset/2017-10-17_Demo_Sewers/input_vector_2017-10-17-10
 start=1670
 odom_a_mod=0.2
 odom_a_noise=0.1
-odom_x_mod=0.4
+odom_x_mod=0.2
 
 
 # # With yaw estimation --> yaw_estimator --> true
 CONTADOR=$1
-directory_out=/home/chur/stats/stats17_oct_wheel_mod_${odom_x_mod}_mod_a_${odom_a_mod}_noise_${odom_a_noise}
+directory_out=/home/chur/Dataset/2017-10-17_Demo_Sewers/ground_truth/
 mkdir -p $directory_out
 cd /home/chur/test_ws/src/topological-montecarlo-localization/amcl_sewer/launch
-cp amcl_bag.launch $directory_out
+cp amcl_bag_ground_truth.launch $directory_out
 cd ../scripts
 cp $0 $directory_out
 until [ $CONTADOR -gt $2 ]; do
   # Roslaunch with multiple parameters
-  roslaunch amcl_sewer amcl_bag.launch play_bag:=false ground_truth:=$ground_file \
+  roslaunch amcl_sewer amcl_bag_ground_truth.launch play_bag:=false ground_truth:=$ground_file\
   ground_truth_out:=${directory_out}/stats_$CONTADOR.txt \
+  trajectory_file:=${directory_out}/traj_$CONTADOR.txt \
   yaw_estimator:=false \
   odom_a_mod:=$odom_a_mod odom_a_noise:=$odom_a_noise odom_x_mod:=$odom_x_mod odom_y_mod:=$odom_x_mod \
   camera:=/front initial_x:=$initial_x initial_y:=$initial_y initial_a:=$initial_a rgbd_odom:=false &
