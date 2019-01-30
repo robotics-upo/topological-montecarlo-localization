@@ -25,7 +25,7 @@ class GroundTruth:
     seq = img.header.seq
     #print "RGB Callback. Seq: %d"%seq
     msg_mh = Manhole
-    
+    print msg_mh
     
     for i in range(len(self.detected_vector)):
       if self.detected_vector[i][0] <= seq and self.detected_vector[i][1] >= seq:
