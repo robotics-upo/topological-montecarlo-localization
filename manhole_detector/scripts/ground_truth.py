@@ -24,8 +24,8 @@ class GroundTruth:
   def rgb_callback(self, img):
     seq = img.header.seq
     #print "RGB Callback. Seq: %d"%seq
-    msg_mh = Manhole
-    print msg_mh
+    msg_mh = Manhole()
+    #print msg_mh
     
     for i in range(len(self.detected_vector)):
       if self.detected_vector[i][0] <= seq and self.detected_vector[i][1] >= seq:
@@ -35,6 +35,7 @@ class GroundTruth:
         
         
         if len(self.detected_vector[i]) > 4:
+          print msg_mh.local_pose.x
           msg_mh.local_pose.x = self.detected_vector[i][3]
           msg_mh.local_pose.y = self.detected_vector[i][4]
           # save a file with the distance to the manhole
@@ -49,7 +50,7 @@ class GroundTruth:
           except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
             print "Exception catched while waiting for transform"
         break
-    self.bool_pub.publish(msg_mh)
+    #self.bool_pub.publish(msg_mh)
     
     
   def __init__(self, camera, filename, out_file):
@@ -85,7 +86,7 @@ class GroundTruth:
       
 if __name__ == '__main__':
   if len(sys.argv) > 2:
-    rospy.init_node(sys.argv)
+    rospy.init_node("ground_truth_manhole")
     out_file = "stats_python.txt"
     
     if len(sys.argv) > 3:
