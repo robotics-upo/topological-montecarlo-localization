@@ -17,26 +17,6 @@ import math
 
 class FakeDetector:    
 
-  # Export images to files:
-  def export_rgb_image(msg, file_):
-    nparr = np.fromstring(msg.data,np.uint8)
-    gray_image = cv2.imdecode(nparr, cv2.CV_LOAD_IMAGE_GRAYSCALE)
-    detect_manhole(gray_image, min_rad)
-    downsampled = cv2.resize(gray_image, None, fx=0.25, fy=0.25)
-    #cv2.imshow('img',downsampled)
-    #cv2.waitKey(0)
-    #cv2.destroyAllWindows()
-    file_.write(np.array2string( downsampled).replace('[','').replace(']',''))
-    
-  def export_depth_image(msg, file_):
-    #print len(msg.data)
-    nparr = np.fromstring(msg.data, np.uint8)
-    gray_image = cv2.imdecode(nparr[12:], cv2.CV_LOAD_IMAGE_GRAYSCALE) # CompressedDepth format adds 12 bits of garbage at the begining
-    #print gray_image
-    downsampled = cv2.resize(gray_image, None, fx=0.25, fy=0.25)
-    file_.write(np.array2string( downsampled).replace('[','').replace(']',''))
-    
-    
   def pose_callback(self, pose):
     self.varx = pose.pose.covariance[0]
     self.vary = pose.pose.covariance[7]
@@ -80,7 +60,6 @@ class FakeDetector:
     self.load_vector(filename)
     np.set_printoptions(precision=3, threshold=10000, linewidth=10000)
     rgb_image = camera + "/rgb/image_raw/compressed"
-    rgb_info = camera + "/rgb/camera_info"
     rospy.Subscriber(rgb_image, CompressedImage, self.rgb_callback)
     rospy.Subscriber("/amcl_sewer_node/estimated_pose", PoseWithCovarianceStamped, self.pose_callback)
     
@@ -90,7 +69,7 @@ class FakeDetector:
     self.pose_pub = rospy.Publisher('position', Pose2D, queue_size=2)
     
     # For statistics stuff
-    self.listener = listener = tf.TransformListener()
+    self.listener = tf.TransformListener()
     self.stats_file = open(out_file, "w")
     
     # Initialice covariances

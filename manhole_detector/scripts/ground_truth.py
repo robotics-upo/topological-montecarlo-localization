@@ -57,7 +57,6 @@ class GroundTruth:
     self.load_vector(filename)
     np.set_printoptions(precision=3, threshold=10000, linewidth=10000)
     rgb_image = camera + "/rgb/image_raw/compressed"
-    rgb_info = camera + "/rgb/camera_info"
     rospy.Subscriber(rgb_image, CompressedImage, self.rgb_callback)
     rospy.Subscriber("/amcl_sewer_node/estimated_pose", PoseWithCovarianceStamped, self.pose_callback)
     
@@ -65,7 +64,7 @@ class GroundTruth:
     self.bool_pub = rospy.Publisher('ground_truth',Manhole, queue_size=2)
         
     # For statistics stuff
-    self.listener = listener = tf.TransformListener()
+    self.listener = tf.TransformListener()
     self.stats_file = open(out_file, "w")
     
     # Initialice covariances

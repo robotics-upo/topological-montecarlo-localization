@@ -1,0 +1,5 @@
+int32 closest_node
+int32 closest_manhole
+string section_type
+geometry_msgs/Pose2D pose
+float32 dist_closest_manhole
