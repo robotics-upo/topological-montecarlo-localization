@@ -17,6 +17,8 @@
   <build_depend>rospy</build_depend>
   <build_depend>std_msgs</build_depend>
   <build_depend>nav_msgs</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>std_msgs</build_depend>
   <build_depend>geometry_msgs</build_depend>
   <build_depend>tf</build_depend>
   <build_depend>cmake_modules</build_depend>
@@ -27,17 +29,22 @@
   <build_depend>gsll</build_depend>
   <build_depend>plane_detector</build_depend>
   <build_depend>wall_detector</build_depend>
+  <build_depend>message_generation</build_depend>
   <run_depend>pcl_ros</run_depend>
   <run_depend>libpcl-all</run_depend>
   <run_depend>roscpp</run_depend>
   <run_depend>rospy</run_depend>
   <run_depend>std_msgs</run_depend>
   <run_depend>nav_msgs</run_depend>
+  <run_depend>std_msgs</run_depend>
+  <run_depend>sensor_msgs</run_depend>
   <run_depend>tf</run_depend>
   <run_depend>sewer_graph</run_depend>
   <run_depend>simple_graph</run_depend>
   <run_depend>gsll</run_depend>
   <run_depend>plane_detector</run_depend>
   <run_depend>wall_detector</run_depend>
+  <run_depend>message_runtime</run_depend>
+  <run_depend>message_generation</run_depend>
 
 </package>

@@ -1,4 +1,4 @@
-#include "SimpleGraph.h"
+#include "simple_graph/SimpleGraph.h"
 
 #include <iostream>
 

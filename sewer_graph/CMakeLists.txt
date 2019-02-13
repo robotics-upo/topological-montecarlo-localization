@@ -13,7 +13,7 @@ catkin_package(
  INCLUDE_DIRS include
  LIBRARIES sewer_graph kmlbase kmldom kmlengine kmlconvenience dxflib geotranz
  CATKIN_DEPENDS roscpp functions visualization_msgs roscpp geometry_msgs simple_graph
- DEPENDS Boost 
+#  DEPENDS Boost 
 )
 
 # Check dependencies for kml libraries
