@@ -47,10 +47,11 @@ class GroundTruth:
             
             self.stats_file.write(text_)
             print "Writed to file:{0}".format(text_)
+            self.bool_pub.publish(msg_mh)
           except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
             print "Exception catched while waiting for transform"
         break
-    #self.bool_pub.publish(msg_mh)
+    
     
     
   def __init__(self, camera, filename, out_file):
