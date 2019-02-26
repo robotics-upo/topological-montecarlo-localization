@@ -162,7 +162,7 @@ public:
     m_detect_manhole_Sub = m_nh.subscribe(m_detectManholeTopic, 1, &ParticleFilter::manholeDetectedCallback, this);
     m_initialPoseSub = m_nh.subscribe(node_name+"/initial_pose", 2, &ParticleFilter::initialPoseReceived, this);
     m_wall_info_sub = m_nh.subscribe("/wall_info", 1, &ParticleFilter::wallInfoCallback, this);
-    m_ground_sub = m_nh.subscribe("/ground_truth", 2, &ParticleFilter::manholeDetectedCallback, this);
+    m_ground_sub = m_nh.subscribe("/ground_truth", 2, &ParticleFilter::groundCallback, this);
     
     // Launch publishers
     m_posesPub = m_nh.advertise<geometry_msgs::PoseArray>(node_name+"/particle_cloud", 1, true);
@@ -380,8 +380,12 @@ private:
      ground = *msg;
      ROS_INFO("Ground truth received. Performing update.");
      updateParticles(5);
-     
-  
+      // Re-compute global TF according to new weight of samples
+    computeGlobalTfAndPose();
+
+    //Do the resampling 
+    m_nUpdates = 0;
+    resample();
   }
   
   void update(bool detected_manhole) {
@@ -399,7 +403,7 @@ private:
     computeVar(x,y,a,xv,yv,av,xycov);
     
     if (traj_file_open) {
-      traj_file << x << "\t" << y << "\t" << ros::Time::now().sec << "." << ros::Time::now().nsec<<  std::endl;
+      traj_file << x << "\t" << y << "\t" << a <<"\t"<< ros::Time::now().sec << "." << ros::Time::now().nsec<<  std::endl;
     }
     
     // Perform different particle update based on current point-cloud and available measurements
@@ -567,8 +571,8 @@ private:
   }
 
   double computeGroundTruthWeight(double x, double y, double g_x, double g_y) {
-    double dist = sqrt( (x-g_x)*(x-g_x) + (y-g_y)*(y-g_y));
-    return manholeConst1*exp(-dist*dist*manholeConst2) + m_manholeThres;
+    double dist2 = (x-g_x)*(x-g_x) + (y-g_y)*(y-g_y);
+    return manholeConst1*exp(-dist2*manholeConst2) + m_manholeThres;
   }
   
   double computeAngularWeight(double tx, double ty, double ta) {

@@ -28,6 +28,7 @@
   <arg name="start" default="0"/>
   
   <arg name="trajectory_file" default="/home/chur/Dataset/2017-09-21_full_track_surface/ground_truth/traj.txt"/>
+  <arg name="trajectory_file_python" default="/home/chur/Dataset/2017-09-21_full_track_surface/ground_truth/traj_python.txt"/>
 
   # Bag file
   <node name="bag_player" type="play" pkg="rosbag" args="$(arg bag_file) --clock -s $(arg start) -r $(arg rate)" if="$(arg play_bag)" output="screen"/>
@@ -117,7 +118,7 @@
   <node name="vis" type="rviz" pkg="rviz" args="-d $(find amcl_sewer)/launch/amcl_pure.rviz" if="$(arg vis)"/>
   
 <!--   <node name="fake_laber" type="fake_detector.py" pkg="manhole_detector" args="/front $(arg ground_truth) $(arg ground_truth_out)" output="screen" /> -->
-<node name="ground_truth" type="ground_truth.py" pkg="manhole_detector" args="/up $(arg ground_truth) $(arg ground_truth_out)" output="screen" />
+<node name="ground_truth" type="ground_truth.py" pkg="manhole_detector" args="/up $(arg ground_truth) $(arg ground_truth_out) $(arg trajectory_file_python) " output="screen" />
   
   <node name="yaw_estimator" type="test_wall_detector" pkg="plane_detector" if="$(arg yaw_estimator)" >
    <param name="camera" value="$(arg camera)"/>
