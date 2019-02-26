@@ -144,7 +144,7 @@ void Test_CreationClass::printAttributes() {
     } else {
         printf("%d", attributes.getWidth());
     }
-    printf(" Type: %s\n", attributes.getLinetype().c_str());
+//     printf(" Type: %s\n", attributes.getLinetype().c_str());
 }
     
 void Test_CreationClass::addEllipse(const DL_EllipseData& data)

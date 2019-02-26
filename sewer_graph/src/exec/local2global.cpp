@@ -4,6 +4,7 @@
 #include <functions/functions.h>
 #include <iostream>
 #include "sewer_graph/trajectory.h"
+#include <string>
 
 using namespace functions;
 using namespace std;
