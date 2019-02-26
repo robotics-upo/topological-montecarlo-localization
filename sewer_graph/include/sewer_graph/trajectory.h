@@ -30,7 +30,17 @@ namespace sewer_graph {
 		//! @param end The last vector position to export
 		//! @return A smart pointer (see libkml details, but it has not to be freed) with the place
 		kmldom::PlacemarkPtr getKMLPlaceMarck(const std::string &place_name, int begin = 0, int end = -1) const;
+
+		//! @brief Returns a placemark with the trajectory information in KML format
+		//! @param place_name The name of the placemark
+		//! @param i The point to export
+		//! @return A smart pointer (see libkml details, but it has not to be freed) with the place
+		kmldom::PlacemarkPtr getKMLPointPlaceMarck(const std::string &place_name, int i) const;
 		
+		//! @brief Returns a placemark with the trajectory information in KML format as a sequence of points
+		//! @param place_name The name of the placemark
+		//! @param begin The first vector position to export
+		//! @param end The last vector position to export
 		std::vector<kmldom::PlacemarkPtr> getKMLPlaceMarcks(const std::string &place_name, int begin, int end) const;
 		
 		inline void setStyle(bool s) { style = s; }
