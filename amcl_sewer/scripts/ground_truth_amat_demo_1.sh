@@ -13,21 +13,20 @@ if [ $# -ne 2 ]; then
 fi
 
 # Initial Parameters Virrei Amat 27 jun
-initial_x=184.276 
-initial_y=-89.030 
-initial_a=-1.549
-bag_file=/home/chur/Dataset/2018-06-27_28_sewers_virrei/siar_2018-06-28-09-57-28_shortened.bag
-ground_file=/home/chur/Dataset/2018-06-27_28_sewers_virrei/ground_truth_28_jun.txt
-start=270
+initial_x=184.228
+initial_y=-89.3911 
+initial_a=1.57
+bag_file=/home/chur/Dataset/2018-07-04_demo_serviceability/siar_2018-07-04-09-38-22.bag
+ground_file=/home/chur/Dataset/2018-07-04_demo_serviceability/ground_truth_1.txt
+start=640
 rate=2
 odom_a_mod=0.3
 odom_a_noise=0.1
 odom_x_mod=0.4
 
-
 # # With yaw estimation --> yaw_estimator --> true
 CONTADOR=$1
-directory_out=/home/chur/Dataset/2018-06-27_28_sewers_virrei/ground_truth_28_jun/
+directory_out=/home/chur/Dataset/2018-07-04_demo_serviceability/ground_truth_1/
 mkdir -p $directory_out
 cd /home/chur/test_ws/src/topological-montecarlo-localization/amcl_sewer/launch
 cp amcl_bag_ground_truth.launch $directory_out
@@ -40,7 +39,7 @@ until [ $CONTADOR -gt $2 ]; do
   trajectory_file:=${directory_out}/traj_$CONTADOR.txt \
   yaw_estimator:=false \
   odom_a_mod:=$odom_a_mod odom_a_noise:=$odom_a_noise odom_x_mod:=$odom_x_mod odom_y_mod:=$odom_x_mod \
-  camera:=/front initial_x:=$initial_x initial_y:=$initial_y initial_a:=$initial_a rgbd_odom:=false \
+  camera:=/up initial_x:=$initial_x initial_y:=$initial_y initial_a:=$initial_a rgbd_odom:=false \
   graph_file:=pl_virrey_amat_graph &
   
   #end of roslaunch

@@ -378,8 +378,9 @@ private:
 
   void groundCallback(const manhole_detector::ManholeConstPtr &msg) {
      ground = *msg;
+     ROS_INFO("Ground truth received. Performing update.");
      updateParticles(5);
-
+     
   
   }
   
