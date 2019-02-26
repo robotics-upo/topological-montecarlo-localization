@@ -48,7 +48,7 @@ int main(int argc, char **argv) {
     string s;
     if (arg[2].find("kml") != std::string::npos) {
       cout << "Exporting kml file: " << arg[2] << endl;
-      traj.exportKMLFile(arg[2],);
+      traj.exportKMLFile(arg[2], type);
     } else {    
       cout << "Exporting text file: " << arg[2] << endl;
       if (!functions::writeStringToFile(arg.at(2), traj.toMatlab(NULL, begin, end)) ) {
