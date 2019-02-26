@@ -20,6 +20,8 @@ int main(int argc, char **argv) {
   
   EarthLocation e(stof(arg[3]), stof(arg[4]));
   
+  sewer_graph::Trajectory::ExportType type = sewer_graph::Trajectory::POINT;
+
   try {
     Trajectory traj(arg[1], e);
   
@@ -33,10 +35,21 @@ int main(int argc, char **argv) {
     if ( arg.isOption("end") ) {
       arg.getOption<int>("end", end);
     }
+    if (arg.isOption("type")) {
+      string t;
+      arg.getOption<string>("type", t);
+      if ( t == "POINT") {
+        type = sewer_graph::Trajectory::POINT;
+      
+      } else if (t == "LINE") {
+        type = sewer_graph::Trajectory::LINE;
+      }
+    }
+
     string s;
     if (arg[2].find("kml") != std::string::npos) {
       cout << "Exporting kml file: " << arg[2] << endl;
-      traj.exportKMLFile(arg[2]);
+      traj.exportKMLFile(arg[2],);
     } else {    
       cout << "Exporting text file: " << arg[2] << endl;
       if (!functions::writeStringToFile(arg.at(2), traj.toMatlab(NULL, begin, end)) ) {

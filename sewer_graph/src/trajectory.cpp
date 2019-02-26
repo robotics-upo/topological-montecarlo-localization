@@ -5,10 +5,12 @@
 #include <vector>
 #include <iostream>
 #include <stdexcept>
+#include <time.h>
 
 #ifdef USE_KML
 #include "kml/base/file.h"
 #include "kml/base/math_util.h"
+#include "kml/base/date_time.h"
 #include "kml/dom.h"
 #include "kml/engine.h"
 #include "kml/convenience/convenience.h"
@@ -17,8 +19,10 @@
 using kmldom::CoordinatesPtr;
 using kmldom::KmlFactory;
 using kmldom::LineStringPtr;
+using kmldom::PointPtr;
 using kmldom::PlacemarkPtr;
 using kmldom::KmlPtr;
+using kmldom::TimeStampPtr;
 using kmlengine::KmlFile;
 using kmlengine::KmlFilePtr;
 #endif
@@ -62,7 +66,7 @@ bool Trajectory::exportKMLFile(const std::string &filename, int begin, int end, 
     default:
       vector<PlacemarkPtr> v = getKMLPlaceMarcks(filename, begin, end);
       for (unsigned int i = 0; i < v.size(); i++) {
-	doc->add_feature(v.at(i));
+	      doc->add_feature(v.at(i));
       }
   }
 
@@ -97,7 +101,7 @@ bool Trajectory::exportKMLFile(const std::string &filename, int begin, int end, 
 string Trajectory::toString() const {
   ostringstream os;
   
-  os << "MTIME\tLAT LON ALT" << endl;
+  os << "# MTIME\tLAT LON ALT" << endl;
   
   for (unsigned int i = 0; i < size(); i++) {
     os << at(i).toString();
@@ -140,12 +144,34 @@ PlacemarkPtr Trajectory::getKMLPlaceMarck(const std::string &place_name, int beg
   return ret;
 }
 
+PlacemarkPtr Trajectory::getKMLPointPlaceMarck(const string &place_name, int i) const {
+  const int __max_str_size = 100;
+  char *date_str = new char[__max_str_size];
+  struct tm *timeinfo;
+  time_t raw_time;
+  raw_time = at(i).getTime();
+  timeinfo = gmtime(&raw_time);
+  strftime(date_str, __max_str_size, "%FT%TZ", timeinfo); // xsd = 2008-10-03T09:25:42Z
+
+  kmlbase::DateTime *d = kmlbase::DateTime::Create(string(date_str));
+  PointPtr p = factory->CreatePoint();
+  CoordinatesPtr coords = factory->CreateCoordinates();
+  coords->add_latlngalt(at(i).getLatitude(), at(i).getLongitude(), at(i).getAltitude());
+  p->set_coordinates(coords);
+
+  PlacemarkPtr ret = kmlconvenience::CreatePointPlacemarkWithTimeStamp(p, *d, "#linestylemap");
+
+  delete date_str;
+   
+  return ret;
+}
+
 vector<PlacemarkPtr> Trajectory::getKMLPlaceMarcks(const std::string &place_name, int begin, int end) const {
   vector<PlacemarkPtr> ret;
   for(unsigned int i = begin; i < end; i++) {
     ostringstream os;
     os << place_name << i + 1;
-    PlacemarkPtr aux = at(begin).getKMLPlacemark(os.str());
+    PlacemarkPtr aux = getKMLPointPlaceMarck(os.str(), i);
     ret.push_back(aux);
   }
   return ret;
@@ -277,11 +303,11 @@ bool Trajectory::fromLocalTrajectory(const string& filename, const EarthLocation
       EarthLocation aux;
       std::vector<double> v = matrix.at(i);
       if (third_is_time) {
-	v.resize(2);
+	      v.resize(2);
       }
       aux.fromRelative(v, center, reverse);
       if (third_is_time && matrix[i].size() > 2) {
-	aux.shift(0, 0 , 0, matrix[i][2]);
+	      aux.shift(0, 0 , 0, matrix[i][2]);
       }
       push_back(aux);
     }
