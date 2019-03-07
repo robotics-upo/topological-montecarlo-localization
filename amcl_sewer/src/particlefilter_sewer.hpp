@@ -227,7 +227,7 @@ public:
     }
     catch (tf::TransformException ex)
     {
-      ROS_ERROR("AMCL3D error: %s",ex.what());
+      ROS_ERROR("AMCL error: %s",ex.what());
       return false;
     }
     tf::Transform T = m_lastOdomTf.inverse()*odomTf;

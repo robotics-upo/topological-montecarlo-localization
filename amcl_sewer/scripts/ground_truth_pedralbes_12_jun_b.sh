@@ -25,9 +25,9 @@ initial_x=96.24 #Initial position (start 980)
 initial_y=-182.72
 initial_a=2.47
  
-bag_file=/home/chur/Dataset/2018-06-12_Pedralbes/siar_2018-06-12-10-54-51.bag
+bag_file=/home/chur/Dataset/2018-06-12_Pedralbes/siar_2018-06-12-10-54-51_short_filtered.bag
 ground_file=/home/chur/Dataset/2018-06-12_Pedralbes/input_vector_ground_truth_b.txt
-start=965
+start=0
 odom_a_mod=0.2
 odom_a_noise=0.1
 odom_x_mod=0.2
@@ -50,7 +50,7 @@ until [ $CONTADOR -gt $2 ]; do
   yaw_estimator:=false \
   odom_a_mod:=$odom_a_mod odom_a_noise:=$odom_a_noise odom_x_mod:=$odom_x_mod odom_y_mod:=$odom_x_mod \
   camera:=/up initial_x:=$initial_x initial_y:=$initial_y initial_a:=$initial_a rgbd_odom:=false \
-  graph_file:=pedralbes_graph &
+  graph_file:=pedralbes_graph_reduced &
   
   #end of roslaunch
   

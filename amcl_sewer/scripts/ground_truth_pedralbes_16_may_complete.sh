@@ -41,7 +41,7 @@ until [ $CONTADOR -gt $2 ]; do
   yaw_estimator:=false \
   odom_a_mod:=$odom_a_mod odom_a_noise:=$odom_a_noise odom_x_mod:=$odom_x_mod odom_y_mod:=$odom_x_mod \
   camera:=/up initial_x:=$initial_x initial_y:=$initial_y initial_a:=$initial_a rgbd_odom:=false \
-  graph_file:=pedralbes_graph &
+  graph_file:=pedralbes_graph_reduced_2 &
   
   #end of roslaunch
   
