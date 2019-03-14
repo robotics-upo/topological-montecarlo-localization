@@ -31,7 +31,7 @@ class GroundTruth:
       (trans,rot) = self.listener.lookupTransform('/map', '/base_link', rospy.Time(0))
       (roll, pitch, yaw) = euler_from_quaternion(rot)
       now = rospy.get_rostime()
-      self.traj_file.write('{0} \t {1} \t {2} \t {3}.{4} \n'.format(trans[0], trans[1], yaw, now.secs, now.nsecs))
+      self.traj_file.write('{0} \t {1} \t {2} \t {3} \t {4} \t {5} \t {6} \t {7}.{8} \n'.format(trans[0], trans[1], trans[2], rot[0], rot[1], rot[2], rot[3], now.secs, format(now.nsecs, '0>9')))
       for i in range(len(self.detected_vector)):
 	
 	if self.detected_vector[i][0] <= seq and self.detected_vector[i][1] >= seq:

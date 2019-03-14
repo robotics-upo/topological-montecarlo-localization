@@ -36,13 +36,14 @@ until [ $CONTADOR -gt $2 ]; do
   roslaunch amcl_sewer amcl_bag_ground_truth_arsi.launch play_bag:=false ground_truth:=$ground_file\
   ground_truth_out:=${directory_out}/stats_$CONTADOR.txt \
   trajectory_file:=${directory_out}/traj_$CONTADOR.txt \
+  trajectory_file_python:=${directory_out}/traj_python_$CONTADOR.txt \
   odom_a_mod:=$odom_a_mod odom_a_noise:=$odom_a_noise odom_x_mod:=$odom_x_mod odom_y_mod:=$odom_x_mod \
-  camera:=/front initial_x:=$initial_x initial_y:=$initial_y initial_a:=$initial_a &
+  camera:=/front_camera initial_x:=$initial_x initial_y:=$initial_y initial_a:=$initial_a &
   
   #end of roslaunch
   
   let pid1=$!
-  rosbag play $bag_file -s $start --clock -r 2
+  rosbag play $bag_file -s $start --clock -r 0.1
   rosnode kill -a
   wait ${pid1}
   let CONTADOR+=1
