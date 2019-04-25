@@ -413,11 +413,11 @@ void SewerGraph::addKMLStyle(kmldom::DocumentPtr& doc) const
   doc->add_styleselector(stylemap);
 }
 
-std::vector<visualization_msgs::Marker> SewerGraph::getMarkers(std::string ref_frame) const {
+std::vector<visualization_msgs::Marker> SewerGraph::getMarkers(const std::string &ref_frame) const {
   visualization_msgs::Marker points, forks, lines, normal;
   points.header.frame_id = ref_frame;
   points.header.stamp = ros::Time::now();
-  points.ns = "sewer_graph";
+  // points.ns = "sewer_graph";
   points.action = visualization_msgs::Marker::ADD;
   points.pose.orientation.w = 1.0;
   points.id = 0;
@@ -425,7 +425,7 @@ std::vector<visualization_msgs::Marker> SewerGraph::getMarkers(std::string ref_f
   
   forks.header.frame_id = ref_frame;
   forks.header.stamp = ros::Time::now();
-  forks.ns = "sewer_graph";
+  // forks.ns = "sewer_graph";
   forks.action = visualization_msgs::Marker::ADD;
   forks.pose.orientation.w = 1.0;
   forks.id = 1;
@@ -433,7 +433,7 @@ std::vector<visualization_msgs::Marker> SewerGraph::getMarkers(std::string ref_f
   
   lines.header.frame_id = ref_frame;
   lines.header.stamp = ros::Time::now();
-  lines.ns = "sewer_graph";
+  // lines.ns = "sewer_graph";
   lines.action = visualization_msgs::Marker::ADD;
   lines.pose.orientation.w = 1.0;
   lines.id = 2;
