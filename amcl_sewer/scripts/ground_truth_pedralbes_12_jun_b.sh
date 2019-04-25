@@ -55,7 +55,7 @@ until [ $CONTADOR -gt $2 ]; do
   #end of roslaunch
   
   let pid1=$!
-  rosbag play $bag_file -s $start --clock -r 2
+  rosbag play $bag_file -s $start --clock -r 0.2
   rosnode kill -a
   wait ${pid1}
   let CONTADOR+=1
