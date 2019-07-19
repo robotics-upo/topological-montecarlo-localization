@@ -3,7 +3,7 @@
 <launch>
 
   # Bag filename
-  <arg name="bag_file" default="~/SIAR/2017-09-21_full_track_surface/siar_2017-09-21-12-17-39.bag"/>
+  <arg name="bag_file" default="/media/chur/2028AD7828AD4E1A/Dataset/2017-09-21_full_track_surface/siar_2017-09-21-12-17-39_gt.bag"/>
   <arg name="play_bag" default="true"/>
   <arg name="rgbd_odom" default="true"/>
   <arg name="rate" default="1"/>
@@ -19,6 +19,10 @@
   <arg name="odom_a_mod" default="0.2" />
   <arg name="odom_a_noise" default="0.075" />
   <arg name="yaw_estimator" default="false" />
+  <arg name="inspection" default="true"/>
+  <arg name="min_particles" default="300"/>
+  <arg name="max_particles" default="400"/>
+  <arg name="angleDev" default="0.04"/>
   
   # Use simulation time fro TFs
   <param name="use_sim_time" value="true" />
@@ -73,8 +77,8 @@
     <param name="odom_frame_id" value="odom" />
     <param name="global_frame_id" value="map" />
 
-    <param name="min_particles" value="400" />
-    <param name="max_particles" value="600" />
+    <param name="min_particles" value="$(arg min_particles)" />
+    <param name="max_particles" value="$(arg max_particles)" />
     
     <param name="odom_x_mod" value="$(arg odom_x_mod)" />
     <param name="odom_y_mod" value="$(arg odom_y_mod)" />
@@ -90,18 +94,18 @@
     <param name="initial_y" value="$(arg initial_y)" />
     <param name="initial_a" value="$(arg initial_a)" />
     
-    <param name="initial_x_dev" value="0.5" />
-    <param name="initial_y_dev" value="0.5" />
+    <param name="initial_x_dev" value="0.3" />
+    <param name="initial_y_dev" value="0.3" />
     <param name="initial_a_dev" value="0.1" />
     
     <param name="edgeDev" value="0.3"/>
     <param name="manholeThres" value="0.00075"/>
-    <param name="manholeDev" value="0.6" />
+    <param name="manholeDev" value="0.4" />
     <param name="min_manhole_detected" value="2"/>
     <param name="forkDev" value="0.5"/>
     <param name="fork_dist" value="6.0"/>
-    <param name="angleDev" value="0.02"/>
-    <param name="angular_weight" value="0.05"/>
+    <param name="angleDev" value="0.08"/>
+    <param name="angular_weight" value="2.00"/>
     
     <param name="sewer_graph_file" value="$(find sewer_graph)/test/gis_graph_reduced"/>
     
@@ -120,17 +124,24 @@
   </node>-->
 
   
-  <node name="ground_truth_laber" type="fake_detector.py" pkg="manhole_detector" args="/up $(arg ground_truth) $(arg ground_truth_out)" output="screen" >
+  <!-- <node name="ground_truth_laber" type="fake_detector.py" pkg="manhole_detector" args="/up $(arg ground_truth) $(arg ground_truth_out)" output="screen" >
     <remap from="manhole" to="ground_truth"/>
-  </node>
+  </node> -->
   
   <node name="yaw_estimator" type="test_wall_detector" pkg="plane_detector" if="$(arg yaw_estimator)" >
    <param name="camera" value="$(arg camera)"/>
    <param name="link_1" value="/base_link"/>
    <param name="link_2" value="$(arg camera)_depth_optical_frame"/>
   </node>
+
+  <include file="$(find siar_inspection)/launch/test.launch" if="$(arg inspection)">
+     <arg name="use_bag" value="false"/>
+     <arg name="operation_mode" value="1"/>
+  </include>
   
+  <node name="ground_truth" type="ground_truth.py" pkg="manhole_detector" args="/up $(arg ground_truth) $(arg ground_truth_out) $(arg trajectory_file_python) " output="screen" />
   <!-- <include file="$(find siar_driver)/launch/frames_siar.launch"/> -->
   
+  <node name="tf_global" type="static_transform_publisher" pkg="tf" args="0 0 0 0 0 0 map world 10"/>
 
 </launch>	
