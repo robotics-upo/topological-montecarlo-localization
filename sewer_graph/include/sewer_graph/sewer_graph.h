@@ -94,7 +94,7 @@ public:
   bool exportKMLFile(const string& filename, sewer_graph::SewerVertexType type = ALL) const;
   
   //! Grief Exports the Graph in RViz format
-  std::vector<visualization_msgs::Marker> getMarkers(std::string ref_frame) const;
+  std::vector<visualization_msgs::Marker> getMarkers(const std::string &ref_frame) const;
   
   sensor_msgs::NavSatFix getReferencePosition() const;
   
