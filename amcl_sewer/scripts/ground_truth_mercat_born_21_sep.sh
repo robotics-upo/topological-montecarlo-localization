@@ -1,8 +1,6 @@
-# $1 --> The first uav number
-# $2 --> The last number of uavs
-# $3 --> The path to the repository (resolution)
-# $4 --> Number of tests to be generated in each folder
-# $5 --> Base input file
+#! /bin/bash
+# $1 --> The first test number
+# $2 --> The last number of tests
 
 CONTADOR=$1
 orig_folder=$PWD
@@ -16,12 +14,13 @@ fi
 initial_x=100.52
 initial_y=-197.05
 initial_a=-0.562
-bag_file=/home/chur/Dataset/2017-09-21_full_track_surface/siar_2017-09-21-12-17-39.bag
+bag_file=/home/chur/Dataset/2017-09-21_full_track_surface/siar_2017-09-21-12-17-39_filtered.bag
+bag_out_file=/home/chur/Dataset/2017-09-21_full_track_surface/siar_gt
 ground_file=/home/chur/Dataset/2017-09-21_full_track_surface/input_vector_2017-09-21_ground_truth.txt
-start=560
+start=20
 end=3260
-odom_a_mod=0.05
-odom_x_mod=0.1
+odom_a_mod=0.2
+odom_x_mod=0.3
 
 
 # # With yaw estimation --> yaw_estimator --> true
@@ -45,7 +44,9 @@ until [ $CONTADOR -gt $2 ]; do
   #end of roslaunch
   
   let pid1=$!
-  rosbag play $bag_file -s $start --clock -r 0.2
+  roslaunch amcl_sewer bag.launch filename:=$bag_out_file &
+  let pid2=$!
+  rosbag play $bag_file -s $start --clock -r 0.1
   rosnode kill -a
   wait ${pid1}
   let CONTADOR+=1

@@ -1,8 +1,6 @@
-# $1 --> The first uav number
-# $2 --> The last number of uavs
-# $3 --> The path to the repository (resolution)
-# $4 --> Number of tests to be generated in each folder
-# $5 --> Base input file
+#! /bin/bash
+# $1 --> The first test number
+# $2 --> The last number of tests
 
 CONTADOR=$1
 orig_folder=$PWD
@@ -22,6 +20,7 @@ initial_y=-176.977798462
 initial_a=-2.88
 
 bag_file=/home/chur/Dataset/2018-06-12_Pedralbes/siar_2018-06-12-10-23-30.bag
+bag_out_file=/home/chur/Dataset/2018-06-12_Pedralbes/siar_gt
 ground_file=/home/chur/Dataset/2018-06-12_Pedralbes/input_vector_ground_truth.txt
 start=0
 odom_a_mod=0.2
@@ -51,7 +50,9 @@ until [ $CONTADOR -gt $2 ]; do
   #end of roslaunch
   
   let pid1=$!
-  rosbag play $bag_file -s $start --clock -r 0.2
+  roslaunch amcl_sewer bag.launch filename:=$bag_out_file &
+  let pid2=$!
+  rosbag play $bag_file -s $start --clock -r 0.1
   rosnode kill -a
   wait ${pid1}
   let CONTADOR+=1

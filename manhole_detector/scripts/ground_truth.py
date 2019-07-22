@@ -7,6 +7,7 @@ import fileinput
 from manhole_detector.msg import Manhole
 from sensor_msgs.msg import CompressedImage
 from geometry_msgs.msg import PoseWithCovarianceStamped
+from geometry_msgs.msg import PoseStamped
 from tf.transformations import euler_from_quaternion, quaternion_from_euler
 import numpy as np
 import sys
@@ -25,13 +26,28 @@ class GroundTruth:
     seq = img.header.seq
     #print "RGB Callback. Seq: %d"%seq
     msg_mh = Manhole()
+    msg_pose = PoseStamped()
+    msg_pose.header.frame_id = "world"
     #print msg_mh
     
     try:
       (trans,rot) = self.listener.lookupTransform('/map', '/base_link', rospy.Time(0))
       (roll, pitch, yaw) = euler_from_quaternion(rot)
       now = rospy.get_rostime()
-      self.traj_file.write('{0} \t {1} \t {2} \t {3} \t {4} \t {5} \t {6} \t {7}.{8} \n'.format(trans[0], trans[1], trans[2], rot[0], rot[1], rot[2], rot[3], now.secs, format(now.nsecs, '0>9')))
+      
+      msg_pose.header.stamp = now
+      msg_pose.header.seq += 1
+      msg_pose.pose.position.x = trans[0]
+      msg_pose.pose.position.y = trans[1]
+      msg_pose.pose.position.z = trans[2]
+      msg_pose.pose.orientation.x = rot[0]
+      msg_pose.pose.orientation.y = rot[1]
+      msg_pose.pose.orientation.z = rot[2]
+      msg_pose.pose.orientation.w = rot[3]
+      
+      self.bs_pub.publish(msg_pose)
+      
+      self.traj_file.write('{0} \t {1} \t {2} \t {3} \t {4} \t {5} \t {6} \t {7} \t {8}.{9} \n'.format(trans[0], trans[1], yaw, trans[2], rot[0], rot[1], rot[2], rot[3], now.secs, format(now.nsecs, '0>9')))
       for i in range(len(self.detected_vector)):
 	
 	if self.detected_vector[i][0] <= seq and self.detected_vector[i][1] >= seq:
@@ -65,6 +81,7 @@ class GroundTruth:
     
     # Setup publisher
     self.bool_pub = rospy.Publisher('ground_truth',Manhole, queue_size=2)
+    self.bs_pub = rospy.Publisher('/baseline', PoseStamped, queue_size=2)
         
     # For statistics stuff
     self.listener = tf.TransformListener()

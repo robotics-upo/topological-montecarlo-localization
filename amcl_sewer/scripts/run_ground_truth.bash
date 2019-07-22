@@ -1,4 +1,7 @@
 #! /bin/bash
-for f in ground*.sh; do  # or wget-*.sh instead of *.sh
-  bash "$f"  111 11
+for f in ground_truth*.sh; do  
+  if [[ $f != *"arsi"* ]]; then
+    
+    bash "$f"  1 1
+  fi
 done

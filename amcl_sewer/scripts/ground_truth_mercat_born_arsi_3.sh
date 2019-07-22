@@ -13,14 +13,14 @@ if [ $# -ne 2 ]; then
 fi
 
 # Initial Parameters ARSI 2
-initial_x=87.002
-initial_y=-117.244
+initial_x=84.002
+initial_y=-121.044
 initial_a=-2.387
 bag_file=/home/chur/Dataset/ARSI/Passatge/ARSI_2017_10_16_PassatgeMercantil.bag
 ground_file=/home/chur/Dataset/ARSI/Passatge/input_vector_ground_truth.txt
 start=0
-odom_a_mod=0.05
-odom_x_mod=0.1
+odom_a_mod=0.15
+odom_x_mod=0.15
 
 
 # # With yaw estimation --> yaw_estimator --> true

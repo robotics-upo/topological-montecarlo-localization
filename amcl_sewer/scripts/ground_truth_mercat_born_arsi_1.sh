@@ -1,8 +1,6 @@
-# $1 --> The first uav number
-# $2 --> The last number of uavs
-# $3 --> The path to the repository (resolution)
-# $4 --> Number of tests to be generated in each folder
-# $5 --> Base input file
+#! /bin/bash
+# $1 --> The first test number
+# $2 --> The last number of tests
 
 CONTADOR=$1
 orig_folder=$PWD
@@ -13,14 +11,14 @@ if [ $# -ne 2 ]; then
 fi
 
 # Initial Parameters ARSI 1
-initial_x=-57.062
-initial_y=-149.227
+initial_x=0.03934
+initial_y=-92.401
 initial_a=0.755
 bag_file=/home/chur/Dataset/ARSI/Fusina/ARSI_2017_10_16_CarrerFusina.bag
 ground_file=/home/chur/Dataset/ARSI/Fusina/input_vector_ground_truth.txt
 start=0
-odom_a_mod=0.05
-odom_x_mod=0.1
+odom_a_mod=0.15
+odom_x_mod=0.15
 
 # # With yaw estimation --> yaw_estimator --> true
 CONTADOR=$1

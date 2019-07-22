@@ -1,9 +1,6 @@
 #! /bin/bash
-# $1 --> The first uav number
-# $2 --> The last number of uavs
-# $3 --> The path to the repository (resolution)
-# $4 --> Number of tests to be generated in each folder
-# $5 --> Base input file
+# $1 --> The first test number
+# $2 --> The last number of tests
 
 CONTADOR=$1
 orig_folder=$PWD
@@ -17,19 +14,20 @@ fi
 initial_x=184.228
 initial_y=-89.3911 
 initial_a=1.57
-bag_file=/media/chur/2028AD7828AD4E1A/Dataset/2018-07-04_demo_serviceability/siar_2018-07-04-09-38-22.bag
-ground_file=/media/chur/2028AD7828AD4E1A/Dataset/2018-07-04_demo_serviceability/ground_truth_1.txt
+bag_file=/home/chur/Dataset/2018-07-04_demo_serviceability/siar_2018-07-04-09-38-22.bag
+bag_out_file=/home/chur/Dataset/2018-07-04_demo_serviceability/siar_gt
+ground_file=/home/chur/Dataset/2018-07-04_demo_serviceability/ground_truth_1.txt
 start=640
-rate=0.2
+rate=0.1
 odom_a_mod=0.3
 odom_a_noise=0.1
 odom_x_mod=0.4
 
 # # With yaw estimation --> yaw_estimator --> true
 CONTADOR=$1
-directory_out=/media/chur/2028AD7828AD4E1A/Dataset/2018-07-04_demo_serviceability/ground_truth_1/
+directory_out=/home/chur/Dataset/2018-07-04_demo_serviceability/ground_truth_1/
 mkdir -p $directory_out
-cd /home/chur/siar_ws/src/topological-montecarlo-localization/amcl_sewer/launch
+cd /home/chur/test_ws/src/topological-montecarlo-localization/amcl_sewer/launch
 cp amcl_bag_ground_truth.launch $directory_out
 cd ../scripts
 cp $0 $directory_out
@@ -46,6 +44,8 @@ until [ $CONTADOR -gt $2 ]; do
   
   #end of roslaunch
   let pid1=$!
+  roslaunch amcl_sewer bag.launch filename:=$bag_out_file &
+  let pid2=$!
   rosbag play $bag_file -s $start --clock -r $rate
   rosnode kill -a
   wait ${pid1}
