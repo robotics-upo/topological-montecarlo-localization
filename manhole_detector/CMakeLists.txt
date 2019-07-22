@@ -12,10 +12,10 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   geometry_msgs
   message_generation
-  compressed_depth_image_transport
   cv_bridge
   dynamic_reconfigure
   image_transport
+  compressed_depth_image_transport
   functions
 )
 
