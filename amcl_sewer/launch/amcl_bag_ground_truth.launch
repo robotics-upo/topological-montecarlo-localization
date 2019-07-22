@@ -20,6 +20,7 @@
   <arg name="odom_a_noise" default="0.075" />
   <arg name="yaw_estimator" default="true" />
   <arg name="graph_file" default="gis_graph_reduced"/>
+  <arg name="inspection" default="true"/>
   
   # Use simulation time fro TFs
   <param name="use_sim_time" value="true" />
@@ -126,7 +127,9 @@
    <param name="link_2" value="$(arg camera)_depth_optical_frame"/>
   </node>
   
-<!--   <include file="$(find siar_driver)/launch/frames_siar.launch"/> -->
-  
+  <include file="$(find siar_inspection)/launch/test.launch" if="$(arg inspection)">
+     <arg name="use_bag" value="false"/>
+     <arg name="operation_mode" value="1"/>
+  </include>  
 
 </launch>	

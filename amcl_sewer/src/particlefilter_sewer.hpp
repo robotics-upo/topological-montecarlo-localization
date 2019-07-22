@@ -26,6 +26,13 @@
 #include <wall_detector/WallInfo.h>
 #include <cmath>
 #include <manhole_detector/Manhole.h>
+#include <std_msgs/Float32.h>
+#include <siar_inspection/Detection.h>
+
+// Particle filter Update type
+enum UpdateType {
+  REGULAR, MANHOLE, FORK, ANGULAR, YAW, GROUND_TRUTH, DETECTION, UNKNOWN = 100
+};
 
 //Struct that contains the data concerning one Particle
 struct Particle
@@ -163,6 +170,7 @@ public:
     m_initialPoseSub = m_nh.subscribe(node_name+"/initial_pose", 2, &ParticleFilter::initialPoseReceived, this);
     m_wall_info_sub = m_nh.subscribe("/wall_info", 1, &ParticleFilter::wallInfoCallback, this);
     m_ground_sub = m_nh.subscribe("/ground_truth", 2, &ParticleFilter::groundCallback, this);
+    m_detection_sub = m_nh.subscribe("/detect_pcl/detection", 2, &ParticleFilter::sectionDetectionCallback, this);
     
     // Launch publishers
     m_posesPub = m_nh.advertise<geometry_msgs::PoseArray>(node_name+"/particle_cloud", 1, true);
@@ -197,7 +205,7 @@ public:
       ROS_INFO("Setting pose: %.3f %.3f %.3f", pose.getOrigin().x(), pose.getOrigin().y(), getYawFromTf(pose));
       setInitialPose(pose, m_initXDev, m_initYDev, m_initADev);
     }
-    last_info.angle = 1e100;
+    last_yaw = 1e100;
   }
 
   //!Default destructor
@@ -371,21 +379,50 @@ private:
   }
   
   void wallInfoCallback(const wall_detector::WallInfoConstPtr &msg) {
-    last_info = *msg;
+    // last_info = *msg;
+    last_yaw = msg->angle;
     last_relative_time = ros::Time::now();
     ROS_INFO("Catched angle measurement. Angle = %f", msg->angle);
+  }
+
+  void sectionDetectionCallback(const siar_inspection::DetectionConstPtr &msg) {
+    last_yaw = msg->yaw;
+    last_detection = *msg;
+    // last_relative_time = ros::Time::now();
+    ROS_INFO("Performing section detection update. Angle = %f. Section type = %s", last_yaw, last_detection.type.c_str());
+
+    float x,y,a,xv,yv,av,xycov;
+    computeVar(x,y,a,xv,yv,av,xycov);
+    if (!isFork(x,y)) {
+	    updateParticles(DETECTION); // section detection update
+      //Do the resampling if needed
+      m_nUpdates++;
+      if(m_nUpdates > m_resampleInterval)
+      {
+        m_nUpdates = 0;
+        resample();
+      }
+            
+      m_doUpdate = false;
+              
+      // Publish particles
+      publishParticles();
+      m_posecovPub.publish(m_lastPoseCov);
+    }
   }
 
   void groundCallback(const manhole_detector::ManholeConstPtr &msg) {
      ground = *msg;
      ROS_INFO("Ground truth received. Performing update.");
-     updateParticles(5);
+     updateParticles(GROUND_TRUTH);
       // Re-compute global TF according to new weight of samples
     computeGlobalTfAndPose();
 
     //Do the resampling 
     m_nUpdates = 0;
     resample();
+    publishParticles();
+    m_posecovPub.publish(m_lastPoseCov);
   }
   
   void update(bool detected_manhole) {
@@ -396,9 +433,6 @@ private:
       return;
     }
     
-    int mode = 0;
-    
-      
     float x,y,a,xv,yv,av,xycov;
     computeVar(x,y,a,xv,yv,av,xycov);
     
@@ -409,20 +443,16 @@ private:
     // Perform different particle update based on current point-cloud and available measurements
     if (detected_manhole) {
       ROS_INFO("Performing Update with Manhole");
-      updateParticles(1);
-    }
-    else if (isFork(x,y)) {
+      updateParticles(MANHOLE);
+    } else if (isFork(x,y)) {
       ROS_INFO("Performing update with fork");
-      updateParticles(2);
-    }
-    else {
-      if (last_relative_time - ros::Time::now() < ros::Duration(0,200000000L) && fabs(last_info.angle) < 5 && last_info.d_left > 0.0) {
-	ROS_INFO("Performing angular update");
-	updateParticles(4); // 4 is for  angular + edge
-      } else {
-	ROS_INFO("Performing regular update");
-	updateParticles(0);
-      }
+      updateParticles(FORK);
+    // } else if (last_relative_time - ros::Time::now() < ros::Duration(0,200000000L) && fabs(last_yaw) < 5) {
+    //   ROS_INFO("Performing angular update");
+    //   updateParticles(YAW); 
+    } else {
+      ROS_INFO("Performing regular update");
+      updateParticles(REGULAR);
     }
     
     // Re-compute global TF according to new weight of samples
@@ -507,7 +537,7 @@ private:
   
   // Update Particles taking into account
   // No input is necessary --> we will get the closest Manhole, which will be used for weighting purposes(with some dispersion)
-  void updateParticles(int mode)
+  void updateParticles(const UpdateType mode)
   {  
     double wt = 0.0;
     
@@ -519,21 +549,24 @@ private:
       // Evaluate the weight of the range sensors
       
       switch (mode) {
-        case 1:
+        case MANHOLE:
           m_p[i].w = computeManholeWeight(tx, ty);
           break;
-        case 2:
+        case FORK:
           m_p[i].w = computeForkWeight(tx, ty);
           break;
-        case 3:
+        case ANGULAR:
           m_p[i].w = computeAngularWeight(tx, ty, ta);
           break;
-        case 4:
+        case YAW:
           m_p[i].w = computeEdgeWeight(tx, ty);
           m_p[i].w += angular_weight * computeAngularWeight(tx, ty, ta);
           break;
-        case 5:
+        case GROUND_TRUTH:
           m_p[i].w = computeGroundTruthWeight(tx, ty, ground.local_pose.x, ground.local_pose.y);  
+          break;
+        case DETECTION:
+          m_p[i].w = computeDetectionWeight(tx, ty, ta);
           break;
         default:
           m_p[i].w = computeEdgeWeight(tx, ty); // Compute weight as a function of the distance to the closest edge
@@ -581,16 +614,48 @@ private:
     double rel_angle = ta - man_angle_1;
     
     while (fabs(rel_angle) > M_PI / 2) {
-      rel_angle -= M_PI * ((std::signbit(rel_angle))? -1.0:1.0);
+      rel_angle -=  (std::signbit(rel_angle))? -M_PI :M_PI;
+    }
+    while (fabs(last_yaw) > M_PI / 2) {
+      last_yaw -=  (std::signbit(last_yaw))? -M_PI :M_PI;
     }
     
-    ROS_INFO("ComputeAngularWeight: Estimated rel angle = %f\t Rel angle from particle = %f", last_info.angle, rel_angle);
-    
-    double angular_error = rel_angle + last_info.angle;
+    // ROS_INFO("ComputeAngularWeight: Estimated rel angle = %f\t Rel angle from particle = %f", last_yaw, rel_angle);
+    double angular_error = rel_angle + last_yaw; // The angles should be opposite (their sum should be zero)
     
     ret = angleConst1*exp(-angular_error*angular_error*angleConst2);
       
     return ret;
+  }
+
+  double computeDetectionWeight(double tx, double ty, double ta) {
+    int i,j;
+    double dist = s_g->getDistanceToClosestEdge(tx, ty, i, j);
+    sewer_graph::SewerEdge cont;
+    s_g->getEdgeContent(i, j,cont);
+    double man_angle_1 = cont.route;
+    double rel_angle = ta - man_angle_1;
+    double angular_error = rel_angle + last_yaw;
+    angular_error = angleConst1*exp(-angular_error*angular_error*angleConst2);
+    
+    while (fabs(rel_angle) > M_PI / 2) {
+      rel_angle -=  (std::signbit(rel_angle))? -M_PI :M_PI;
+    }
+    while (fabs(last_yaw) > M_PI / 2) {
+      last_yaw -=  (std::signbit(last_yaw))? -M_PI :M_PI;
+    }
+    double weight = computeAngularWeight(tx, ty, ta);
+    
+    sewer_graph::SewerEdge content; 
+    double mult = 0.5;
+    if (s_g->getEdgeContent(i, j, content)) {
+      for (auto x:last_detection.detection_vector) {
+        if (x.type == content.section) 
+          mult = last_detection.min_score / x.score;
+      }
+    }
+
+    return angular_weight * weight + mult*edgeConst1*exp(-dist*dist*edgeConst2);
   }
 
   //! Set the initial pose of the particle filter
@@ -803,9 +868,12 @@ private:
   int m_resampleInterval;
   
   //! Yaw estimation
-  wall_detector::WallInfo last_info;
+  double last_yaw;
   ros::Time last_relative_time;
   double angular_weight;
+
+  // Section detection stuff
+  siar_inspection::Detection last_detection;
   
   //! Thresholds for filter updating
   double m_dTh, m_aTh, m_tTh;
@@ -826,7 +894,7 @@ private:
   ros::NodeHandle m_nh;
   tf::TransformBroadcaster m_tfBr;
   tf::TransformListener m_tfListener;
-  ros::Subscriber m_detect_manhole_Sub, m_initialPoseSub, m_odomTfSub, m_wall_info_sub, m_ground_sub;
+  ros::Subscriber m_detect_manhole_Sub, m_initialPoseSub, m_odomTfSub, m_wall_info_sub, m_ground_sub, m_detection_sub;
   ros::Publisher m_posesPub, m_graphPub, m_gpsPub, m_posecovPub;
   ros::Timer updateTimer;
   
