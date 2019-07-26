@@ -19,10 +19,10 @@ initial_a=-2.3
 bag_file=/media/chur/2028AD7828AD4E1A/Dataset/2017-10-11/siar_2017-10-11-11-05-03_filtered.bag
 ground_file=/media/chur/2028AD7828AD4E1A/Dataset/2017-10-11/input_vector_2017-10-11-11-05-03_ground_truth.txt
 start=92
-duration=2500
-odom_a_mod=0.05
+duration=2350
+odom_a_mod=0.08
 odom_a_noise=0.04
-odom_x_mod=0.2
+odom_x_mod=0.3
 
 
 # # With yaw estimation --> yaw_estimator --> true
