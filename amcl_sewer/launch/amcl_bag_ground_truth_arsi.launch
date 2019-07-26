@@ -17,7 +17,11 @@
   <arg name="odom_y_mod" default="0.2" />
   <arg name="odom_a_mod" default="0.1" />
   <arg name="odom_a_noise" default="0.075" />
-  <arg name="graph_file" default="gis_graph_reduced"/>
+  <arg name="graph_file" default="gis_graph_reduced_2"/>
+  
+  <node pkg="odom_to_tf" type="odom_to_tf.py" name="odom_to_tf">
+    <remap from="/odom" to="/rtabmap/odom"/>
+  </node>
   
   # Use simulation time fro TFs
   <param name="use_sim_time" value="true" />
@@ -32,19 +36,19 @@
   <node name="bag_player" type="play" pkg="rosbag" args="$(arg bag_file) --clock -s $(arg start) -r $(arg rate)" if="$(arg play_bag)" output="screen"/>
   
   # Uncompress images and depth
-  <node name="republish_img" type="republish" pkg="image_transport" output="screen" args="compressed in:=/$(arg camera)/rgb/image_raw raw out:=/$(arg camera)/rgb/image_raw"/>
-  <node name="republish_depth" type="republish" pkg="image_transport" output="screen" args="compressedDepth in:=/$(arg camera)/depth_registered/image_raw raw out:=/$(arg camera)/depth_registered/image_raw"/>
-  <node name="republish_depth_2" type="republish" pkg="image_transport" output="screen" args="compressedDepth in:=/up/depth_registered/image_raw raw out:=/up/depth_registered/image_raw"/>
+  <node name="republish_img" type="republish" pkg="image_transport" output="screen" args="raw in:=/$(arg camera)/rgb/image out:=/$(arg camera)/rgb/image"/>
+  <node name="republish_depth" type="republish" pkg="image_transport" output="screen" args="compressedDepth in:=/$(arg camera)/depth_registered/image raw out:=/$(arg camera)/depth_registered/image_raw"/>
+  <node name="republish_depth_2" type="republish" pkg="image_transport" output="screen" args="compressedDepth in:=/up/depth_registered/image raw out:=/up/depth_registered/image_raw"/>
     
 <!--   <node name="amcl_node" type="amcl_node" pkg="amcl_sewer" launch-prefix="xterm -e gdb - -args" > for DEBUG-->
-<node name="amcl_node" type="amcl_node" pkg="amcl_sewer" output="screen">
+<node name="amcl_node" type="amcl_node" pkg="amcl_sewer">
     <param name="rate" value="10.0" />
     <param name="base_frame_id" value="base_link" />
     <param name="odom_frame_id" value="odom" />
     <param name="global_frame_id" value="map" />
 
-    <param name="min_particles" value="1000" />
-    <param name="max_particles" value="1500" />
+    <param name="min_particles" value="700" />
+    <param name="max_particles" value="1000" />
     
     <param name="odom_x_mod" value="$(arg odom_x_mod)" />
     <param name="odom_y_mod" value="$(arg odom_y_mod)" />
@@ -86,6 +90,8 @@
   <node name="vis" type="rviz" pkg="rviz" args="-d $(find amcl_sewer)/launch/amcl_pure.rviz" if="$(arg vis)"/>
   
 <!--   <node name="fake_laber" type="fake_detector.py" pkg="manhole_detector" args="/front $(arg ground_truth) $(arg ground_truth_out)" output="screen" /> -->
-<node name="ground_truth" type="ground_truth.py" pkg="manhole_detector" args="/up $(arg ground_truth) $(arg ground_truth_out) $(arg trajectory_file_python) " output="screen" />
+<node name="ground_truth" type="ground_truth.py" pkg="manhole_detector" args="/front_camera $(arg ground_truth) $(arg ground_truth_out) $(arg trajectory_file_python) " output="screen" >
+  <remap from ="/front_camera/rgb/image_raw/compressed" to="/front_camera/rgb/image/compressed"/>
+</node>
   
 </launch>	
