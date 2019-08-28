@@ -55,7 +55,6 @@ WallDetector::~WallDetector()
 {
 }
 
-
 WallDetector::WallDetector(ros::NodeHandle &nh, ros::NodeHandle &pnh): PlaneDetectorROS(nh, pnh)
 {
   // Set defaults
@@ -99,12 +98,10 @@ WallDetector::WallDetector(double delta, double epsilon, double gamma, int theta
   marker_topic = "/wall_marker";
 }
 
-
-
 void WallDetector::detectWalls(const sensor_msgs::Image &img)
 {
-  if (detectPlanes(img) < 2) {
-    // Could not detect a wall plane --> exit
+  if (detectPlanes(img) < 1) {
+    // Could not detect any planes --> exit
     ROS_INFO("Wall detector --> Not enough planes" );
     return;
   }
@@ -125,29 +122,31 @@ void WallDetector::detectWalls(const sensor_msgs::Image &img)
   double angle_1, angle_2;
   for (unsigned int i = 0; i < _detected_planes.size() ; i++) {
     DetectedPlane p = _detected_planes.at(i);
-//     ROS_INFO("Detected plane: %s", p.toString().c_str());
+    auto r_g = p.r_g;
     
-    p = p.affine(T_inv);
-//     ROS_INFO("Transformed plane: %s", p.toString().c_str());
+    p = p.affine(T); // This calculates d and v  transformed by T inverse
+    p.r_g = T * r_g; // Get the new center of mass of the detected plane
+
     if (fabs(p.v(1)) > 0.9 ) {
       // New wall plane detected
-//       ROS_INFO("Wall detector: New wall detected: %s", p.toString().c_str() );
+      
       wall_planes.push_back(p);
+      // ROS_INFO("Wall detector: New wall detected: %s", wall_planes.at(wall_planes.size() - 1).toString().c_str() );
       Eigen::Vector3d cross = p.v.cross(v_z);
       
       double angle = -atan(cross(1)/cross(0));
 //       ROS_INFO("New angle: %f", angle);
       
       if (wall_planes. size() == 1) 
-	angle_1 = angle;
+      	angle_1 = angle;
       else
-	angle_2 = angle;
+	      angle_2 = angle;
     }
     
   } 
   
   wall_detector::WallInfo w_info;
-  if (wall_planes.size() != 2 && wall_planes.size() != 1) {
+  if (wall_planes.size() > 2 || wall_planes.size() == 0) {
     ROS_INFO("Detected %lu wall planes --> not taking decisions", wall_planes.size());
     // Publish wrong info (distances cannot be less than zero)
     
@@ -159,6 +158,7 @@ void WallDetector::detectWalls(const sensor_msgs::Image &img)
   }
   DetectedPlaneROS p_left(wall_planes.at(0));
   if (wall_planes.size() == 1) {
+    ROS_INFO("Detected one wall plane --> angle = %f", angle_1);
     marker_pub.publish(p_left.getMarker(link_1, 0, _color.at(0)));
     w_info.d_left = -1.0;
     w_info.d_right = -1.0;
@@ -180,11 +180,12 @@ void WallDetector::detectWalls(const sensor_msgs::Image &img)
   
   if (p_left.v.dot(v_y) < 0) {
     // TODO: switch if ...
-    DetectedPlane aux = p_left;
+    DetectedPlaneROS aux = p_left;
     p_left = p_right;
     p_right = aux;
   }
-//   ROS_INFO("Angle_left = %f \t Angle_right = %f \t Angle = %f", angle_1, angle_2, (angle_1 + angle_2) * 0.5);
+  ROS_INFO("Angle_left = %f \t Angle_right = %f \t Angle = %f", angle_1, angle_2, (angle_1 + angle_2) * 0.5);
+  ROS_INFO("Left plane: %s. \t Right plane: %s", p_left.toString().c_str(), p_right.toString().c_str());
   
   // Publish markers
   marker_pub.publish(p_left.getMarker(link_1, 0, _color.at(0)));
@@ -208,7 +209,6 @@ void WallDetector::getTransformFromTF()
     bool ok = false;
   
     while (!ok && ros::ok()) {
-      
       tfListener.lookupTransform(link_1, link_2, ros::Time(0), tf_);
       ok = true;
     } 
