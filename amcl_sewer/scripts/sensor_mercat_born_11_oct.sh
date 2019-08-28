@@ -42,7 +42,7 @@ until [ $CONTADOR -gt $2 ]; do
   yaw_estimator:=false \
   odom_a_mod:=$odom_a_mod odom_a_noise:=$odom_a_noise odom_x_mod:=$odom_x_mod odom_y_mod:=$odom_x_mod \
   min_particles:=300 max_particles:=400 \
-  camera:=/front initial_x:=$initial_x initial_y:=$initial_y initial_a:=$initial_a rgbd_odom:=true &
+  camera:=/up initial_x:=$initial_x initial_y:=$initial_y initial_a:=$initial_a rgbd_odom:=true &
   
   #end of roslaunch
   

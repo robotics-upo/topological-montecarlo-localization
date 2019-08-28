@@ -65,7 +65,7 @@ public:
     // Read node parameters
     ros::NodeHandle lnh("~");
     if(!lnh.getParam("base_frame_id", m_baseFrameId))
-      m_baseFrameId = "base_link";  
+      m_baseFrameId = "base_link_vo";  
     if(!lnh.getParam("odom_frame_id", m_odomFrameId))
       m_odomFrameId = "odom";  
     if(!lnh.getParam("global_frame_id", m_globalFrameId))
@@ -389,11 +389,11 @@ private:
     last_yaw = msg->yaw;
     last_detection = *msg;
     // last_relative_time = ros::Time::now();
-    ROS_INFO("Performing section detection update. Angle = %f. Section type = %s", last_yaw, last_detection.type.c_str());
 
     float x,y,a,xv,yv,av,xycov;
     computeVar(x,y,a,xv,yv,av,xycov);
     if (!isFork(x,y)) {
+      ROS_INFO("Performing section detection update. Angle = %f. Section type = %s", last_yaw, last_detection.type.c_str());
 	    updateParticles(DETECTION); // section detection update
       //Do the resampling if needed
       m_nUpdates++;
@@ -490,7 +490,7 @@ private:
     tf::StampedTransform odomTf;
     try
     {
-      m_tfListener.waitForTransform(m_odomFrameId, m_baseFrameId, ros::Time(0), ros::Duration(1.0));
+      m_tfListener.waitForTransform(m_odomFrameId, m_baseFrameId, ros::Time(0), ros::Duration(0.1));
       m_tfListener.lookupTransform(m_odomFrameId, m_baseFrameId, ros::Time(0), odomTf);
     }
     catch (tf::TransformException ex)
@@ -635,19 +635,25 @@ private:
     s_g->getEdgeContent(i, j,cont);
     double man_angle_1 = cont.route;
     double rel_angle = ta - man_angle_1;
+
+    // while (fabs(rel_angle) > M_PI / 2) {
+    //   rel_angle -=  (std::signbit(rel_angle))? -M_PI :M_PI;
+    // }
+    // while (fabs(last_yaw) > M_PI / 2) {
+    //   last_yaw -=  (std::signbit(last_yaw))? -M_PI :M_PI;
+    // }
+
     double angular_error = rel_angle + last_yaw;
+    while (fabs(angular_error) > M_PI / 2) {
+      angular_error -=  (std::signbit(angular_error))? -M_PI :M_PI;
+    }
     angular_error = angleConst1*exp(-angular_error*angular_error*angleConst2);
-    
-    while (fabs(rel_angle) > M_PI / 2) {
-      rel_angle -=  (std::signbit(rel_angle))? -M_PI :M_PI;
-    }
-    while (fabs(last_yaw) > M_PI / 2) {
-      last_yaw -=  (std::signbit(last_yaw))? -M_PI :M_PI;
-    }
-    double weight = computeAngularWeight(tx, ty, ta);
+    // double weight = computeAngularWeight(tx, ty, ta);
+
+
     
     sewer_graph::SewerEdge content; 
-    double mult = 0.5;
+    double mult = 0.3;
     if (s_g->getEdgeContent(i, j, content)) {
       for (auto x:last_detection.detection_vector) {
         if (x.type == content.section) 
@@ -655,7 +661,7 @@ private:
       }
     }
 
-    return angular_weight * weight + mult*edgeConst1*exp(-dist*dist*edgeConst2);
+    return angular_weight * angular_error + mult*edgeConst1*exp(-dist*dist*edgeConst2);
   }
 
   //! Set the initial pose of the particle filter

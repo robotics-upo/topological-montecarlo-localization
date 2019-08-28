@@ -23,11 +23,12 @@
   <arg name="min_particles" default="300"/>
   <arg name="max_particles" default="400"/>
   <arg name="angleDev" default="0.04"/>
+  <arg name="graph_file" default="gis_graph_reduced"/>
   
   # Use simulation time fro TFs
   <param name="use_sim_time" value="true" />
   
-  <arg name="camera" default="/front"/>
+  <arg name="camera" default="/up"/>
   <arg name="start" default="0"/>
   
   <arg name="trajectory_file" default="$(find amcl_sewer)/traj.txt"/>
@@ -107,7 +108,7 @@
     <param name="angleDev" value="0.08"/>
     <param name="angular_weight" value="2.00"/>
     
-    <param name="sewer_graph_file" value="$(find sewer_graph)/test/gis_graph_reduced"/>
+    <param name="sewer_graph_file" value="$(find sewer_graph)/test/$(arg graph_file)"/>
     
     <remap from="/amcl_sewer_node/initial_pose" to="/initialpose"/>
     
@@ -128,10 +129,11 @@
     <remap from="manhole" to="ground_truth"/>
   </node> -->
   
-  <node name="yaw_estimator" type="test_wall_detector" pkg="plane_detector" if="$(arg yaw_estimator)" >
+  <node name="yaw_estimator" type="test_wall_detector" pkg="wall_detector" if="$(arg yaw_estimator)" output="screen">
    <param name="camera" value="$(arg camera)"/>
    <param name="link_1" value="/base_link"/>
    <param name="link_2" value="$(arg camera)_depth_optical_frame"/>
+   <remap from="/wall_info" to="w"/>
   </node>
 
   <include file="$(find siar_inspection)/launch/test.launch" if="$(arg inspection)">
@@ -139,7 +141,7 @@
      <arg name="operation_mode" value="1"/>
   </include>
   
-  <node name="ground_truth" type="ground_truth.py" pkg="manhole_detector" args="/up $(arg ground_truth) $(arg ground_truth_out) $(arg trajectory_file_python) " output="screen" />
+  <node name="ground_truth" type="ground_truth.py" pkg="manhole_detector" args="$(arg camera) $(arg ground_truth) $(arg ground_truth_out) $(arg trajectory_file_python) " output="screen" />
   <!-- <include file="$(find siar_driver)/launch/frames_siar.launch"/> -->
   
   <node name="tf_global" type="static_transform_publisher" pkg="tf" args="0 0 0 0 0 0 map world 10"/>

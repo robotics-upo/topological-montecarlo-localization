@@ -1,3 +1,4 @@
+#!/bin/bash
 # $1 --> The first uav number
 # $2 --> The last number of uavs
 # $3 --> The path to the repository (resolution)
@@ -12,12 +13,14 @@ if [ $# -ne 2 ]; then
   exit 1
 fi
 
+source ~/siar_ws/devel/setup.bash
+
 # Initial Parameters_11_oct 
 initial_x=-12.671
 initial_y=-105.37
 initial_a=-2.3
-bag_file=/home/chur/Dataset/2017-10-11/siar_2017-10-11-11-05-03_filtered.bag
-ground_file=/home/chur/Dataset/2017-10-11/input_vector_2017-10-11-11-05-03_ground_truth.txt
+bag_file=/media/chur/2028AD7828AD4E1A/Dataset/2017-10-11/siar_2017-10-11-11-05-03_filtered.bag
+ground_file=/media/chur/2028AD7828AD4E1A/Dataset/2017-10-11/input_vector_2017-10-11-11-05-03_ground_truth.txt
 start=92
 duration=2350
 odom_a_mod=0.08
@@ -29,7 +32,7 @@ odom_x_mod=0.3
 CONTADOR=$1
 directory_out=/home/chur/Dataset/2017-10-11/no_vo
 mkdir -p $directory_out
-cd /home/chur/test_ws/src/topological-montecarlo-localization/amcl_sewer/launch
+roscd amcl_sewer/launch
 cp amcl_bag_ground_truth.launch $directory_out
 cd ../scripts
 cp $0 $directory_out
@@ -42,7 +45,7 @@ until [ $CONTADOR -gt $2 ]; do
   yaw_estimator:=false \
   odom_a_mod:=$odom_a_mod odom_a_noise:=$odom_a_noise odom_x_mod:=$odom_x_mod odom_y_mod:=$odom_x_mod \
   min_particles:=300 max_particles:=400 \
-  camera:=/front initial_x:=$initial_x initial_y:=$initial_y initial_a:=$initial_a rgbd_odom:=false &
+  camera:=/up initial_x:=$initial_x initial_y:=$initial_y initial_a:=$initial_a rgbd_odom:=false &
   
   #end of roslaunch
   
