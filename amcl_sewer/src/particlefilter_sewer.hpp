@@ -380,7 +380,7 @@ private:
   
   void wallInfoCallback(const wall_detector::WallInfoConstPtr &msg) {
     // last_info = *msg;
-    last_yaw = msg->angle;
+    last_yaw = -msg->angle; // TODO: is the sign OK?
     last_relative_time = ros::Time::now();
     ROS_INFO("Catched angle measurement. Angle = %f", msg->angle);
   }
@@ -447,9 +447,9 @@ private:
     } else if (isFork(x,y)) {
       ROS_INFO("Performing update with fork");
       updateParticles(FORK);
-    // } else if (last_relative_time - ros::Time::now() < ros::Duration(0,200000000L) && fabs(last_yaw) < 5) {
-    //   ROS_INFO("Performing angular update");
-    //   updateParticles(YAW); 
+    } else if (last_relative_time - ros::Time::now() < ros::Duration(0,200000000L) && fabs(last_yaw) < 5) {
+      ROS_INFO("Performing angular update");
+      updateParticles(YAW); 
     } else {
       ROS_INFO("Performing regular update");
       updateParticles(REGULAR);
@@ -610,7 +610,8 @@ private:
   
   double computeAngularWeight(double tx, double ty, double ta) {
     double ret = 0.0;
-    double man_angle_1 = s_g->getClosestEdgeAngle(tx, ty);
+    double detection_x = 1.5;
+    double man_angle_1 = s_g->getClosestEdgeAngle( tx + detection_x*cos(ta), ty + detection_x * sin(ta));
     double rel_angle = ta - man_angle_1;
     
     while (fabs(rel_angle) > M_PI / 2) {

@@ -28,6 +28,7 @@ public:
   
 protected:
   int _skip, _skip_cont;
+  double _vertical_threshold;
   
   void getTransformFromTF();
   
@@ -48,7 +49,6 @@ protected:
   // Transforms
   Eigen::Affine3d T;
   Eigen::Affine3d T_inv;
-  
 };
 
 WallDetector::~WallDetector()
@@ -71,6 +71,8 @@ WallDetector::WallDetector(ros::NodeHandle &nh, ros::NodeHandle &pnh): PlaneDete
     _skip = 2;
   _skip_cont = 0;
   
+  if (!pnh.getParam("vertical_threshold", _vertical_threshold))
+    _vertical_threshold = 0.7;
   
   img_topic_1 = cam_1 + "/depth_registered/image_raw";
   info_topic_1 = cam_1 + "/depth_registered/camera_info";
@@ -127,7 +129,7 @@ void WallDetector::detectWalls(const sensor_msgs::Image &img)
     p = p.affine(T); // This calculates d and v  transformed by T inverse
     p.r_g = T * r_g; // Get the new center of mass of the detected plane
 
-    if (fabs(p.v(1)) > 0.9 ) {
+    if (fabs(p.v(1)) > _vertical_threshold ) {
       // New wall plane detected
       
       wall_planes.push_back(p);
@@ -153,7 +155,7 @@ void WallDetector::detectWalls(const sensor_msgs::Image &img)
     w_info.d_left = -1.0;
     w_info.d_right = -1.0;
     w_info.angle = -1.0;
-    wall_info_pub.publish(w_info);
+    // wall_info_pub.publish(w_info);
     return;
   }
   DetectedPlaneROS p_left(wall_planes.at(0));
