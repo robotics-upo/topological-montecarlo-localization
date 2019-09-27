@@ -31,7 +31,7 @@ class GroundTruth:
     #print msg_mh
     
     try:
-      (trans,rot) = self.listener.lookupTransform('/map', '/base_link', rospy.Time(0))
+      (trans,rot) = self.listener.lookupTransform('/map', self.base_frame, rospy.Time(0))
       (roll, pitch, yaw) = euler_from_quaternion(rot)
       now = rospy.get_rostime()
       
@@ -89,6 +89,13 @@ class GroundTruth:
     print ("Opening trajectory out file {0}".format(out_file_2))
     self.traj_file = open(out_file_2, "w")
     
+    # Params
+    self.base_frame = 'base_link'
+    if rospy.has_param('~base_frame_id'):
+          self.base_frame = rospy.get_param('~base_frame_id')
+    
+    print "Base frame: %s"%self.base_frame
+    
     # Initialice covariances
     self.varx = 0
     self.vary = 0
@@ -105,7 +112,7 @@ class GroundTruth:
     print "Loaded_vector"
     print self.detected_vector
       
-if __name__ == '__main__':
+if __name__ == '__main__':    
   if len(sys.argv) > 2:
     rospy.init_node("ground_truth_manhole")
     out_file = "stats_python.txt"

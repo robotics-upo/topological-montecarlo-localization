@@ -76,6 +76,8 @@ public:
     // Read amcl parameters
     if(!lnh.getParam("update_rate", m_updateRate))
       m_updateRate = 10.0;
+    if(!lnh.getParam("angular_rate", m_angularRate))
+      m_angularRate = 0.2;
     if(!lnh.getParam("min_particles", m_minParticles))
       m_minParticles = 300;
     if(!lnh.getParam("max_particles", m_maxParticles))
@@ -380,9 +382,22 @@ private:
   
   void wallInfoCallback(const wall_detector::WallInfoConstPtr &msg) {
     // last_info = *msg;
-    last_yaw = -msg->angle; // TODO: is the sign OK?
-    last_relative_time = ros::Time::now();
-    ROS_INFO("Catched angle measurement. Angle = %f", msg->angle);
+    if (fabs(msg->angle) < 0.06) {
+      last_yaw = 0.9*msg->angle; 
+      last_relative_time = ros::Time::now();
+      float x,y,a,xv,yv,av,xycov;
+      computeVar(x,y,a,xv,yv,av,xycov);
+      double detection_x = 1.5;
+      double man_angle_1 = s_g->getClosestEdgeAngle( x + detection_x*cos(a), y + detection_x * sin(a));
+      double rel_angle = a - man_angle_1;
+      
+      while (fabs(rel_angle) > M_PI / 2) {
+        rel_angle -=  (std::signbit(rel_angle))? -M_PI :M_PI;
+      }
+      ROS_INFO("Catched angle measurement. Angle = %f. Relative angle = %f", last_yaw, rel_angle);
+    }
+
+    
   }
 
   void sectionDetectionCallback(const siar_inspection::DetectionConstPtr &msg) {
@@ -447,9 +462,16 @@ private:
     } else if (isFork(x,y)) {
       ROS_INFO("Performing update with fork");
       updateParticles(FORK);
-    } else if (last_relative_time - ros::Time::now() < ros::Duration(0,200000000L) && fabs(last_yaw) < 5) {
-      ROS_INFO("Performing angular update");
-      updateParticles(YAW); 
+    } else if (last_relative_time - ros::Time::now() < ros::Duration(0,100000000L) && fabs(last_yaw) < 5) {
+      
+      if (gsl_rng_uniform(m_randomValue) < m_angularRate) {
+        ROS_INFO("Performing angular update. ");
+        updateParticles(ANGULAR); 
+
+      } else {
+        ROS_INFO("Performing regular update, but detected yaw.");
+        updateParticles(REGULAR); 
+      }
     } else {
       ROS_INFO("Performing regular update");
       updateParticles(REGULAR);
@@ -622,7 +644,7 @@ private:
     }
     
     // ROS_INFO("ComputeAngularWeight: Estimated rel angle = %f\t Rel angle from particle = %f", last_yaw, rel_angle);
-    double angular_error = rel_angle + last_yaw; // The angles should be opposite (their sum should be zero)
+    double angular_error = rel_angle - last_yaw; // The angles should be opposite (their sum should be zero)
     
     ret = angleConst1*exp(-angular_error*angular_error*angleConst2);
       
@@ -644,7 +666,7 @@ private:
     //   last_yaw -=  (std::signbit(last_yaw))? -M_PI :M_PI;
     // }
 
-    double angular_error = rel_angle + last_yaw;
+    double angular_error = rel_angle - last_yaw;
     while (fabs(angular_error) > M_PI / 2) {
       angular_error -=  (std::signbit(angular_error))? -M_PI :M_PI;
     }
@@ -745,7 +767,7 @@ private:
     //Do resamplig
     for(m=0; m<m_p.size(); m++)
     {
-      u = r + factor*(float)m;
+      u = std::fma(factor,m, r);
       while(u > c)
       {
         i++;
@@ -889,6 +911,7 @@ private:
   geometry_msgs::PoseWithCovarianceStamped m_lastPoseCov;
   bool m_doUpdate;
   double m_updateRate;
+  double m_angularRate;
 
   //! Node parameters
   std::string m_detectManholeTopic;

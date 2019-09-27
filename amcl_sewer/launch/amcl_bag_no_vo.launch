@@ -5,7 +5,6 @@
   # Bag filename
   <arg name="bag_file" default="/media/chur/2028AD7828AD4E1A/Dataset/2017-09-21_full_track_surface/siar_2017-09-21-12-17-39_gt.bag"/>
   <arg name="play_bag" default="true"/>
-  <arg name="rgbd_odom" default="true"/>
   <arg name="rate" default="1"/>
   <arg name="initial_x" default="98.9293441772" />
   <arg name="initial_y" default="-195.20526123" />
@@ -24,9 +23,7 @@
   <arg name="max_particles" default="400"/>
   <arg name="angleDev" default="0.04"/>
   <arg name="graph_file" default="gis_graph_reduced"/>
-  <arg name="base_frame_id" default="/base_link"/>
-  <arg name="odom_frame_id" default="/odom"/>
-  <arg name="emit_tf_base" default="false"/>
+  <arg name="base_frame" default="/base_link_vo"/>
   
   # Use simulation time fro TFs
   <param name="use_sim_time" value="true" />
@@ -41,53 +38,23 @@
   
   # Uncompress images and depth
   <node name="republish_img" type="republish" pkg="image_transport" output="screen" args="compressed in:=/$(arg camera)/rgb/image_raw raw out:=/$(arg camera)/rgb/image_raw"/>
-  <node name="republish_depth" type="republish" pkg="image_transport" output="screen" args="compressedDepth in:=/front/depth_registered/image_raw raw out:=/front/depth_registered/image_raw"/>
+  <node name="republish_depth" type="republish" pkg="image_transport" output="screen" args="compressedDepth in:=/$(arg camera)/depth_registered/image_raw raw out:=/$(arg camera)/depth_registered/image_raw"/>
   <node name="republish_depth_2" type="republish" pkg="image_transport" output="screen" args="compressedDepth in:=/up/depth_registered/image_raw raw out:=/up/depth_registered/image_raw"/>
     
-  # Launch RGB-D odom
-  <node name="rgbd_odom_node" type="rgbd_odom_node" pkg="rgbd_odom" if="$(arg rgbd_odom)" >
-    <param name="camera_topic" value="$(arg camera)" />
-    <param name="tf_topic_out" value="/rgbd_odom/transform" />
-    <param name="max_features" value="800" />
-    <param name="flow_threshold" value="10" />
-    <param name="min_matches" value="15" />
-    <param name="odom_frame_id" value="$(arg odom_frame_id)" />
-    <param name="base_frame_id" value="$(arg base_frame_id)" />
-    <param name="publish_image" value="true" />
-    <param name="publish_point_cloud" value="true" />
-    <param name="use_sba" value="false" />
-    <param name="type_sba" value="1" />         # 0: MOTIONSTRUCTURE, 1: MOTION, 2: STRUCTURE (cvsba)
-    <param name="max_keyframes" value="10" />
-    <param name="use_imu" value="true" />
-    <param name="imu_topic" value="/arduimu_v3/imu" />
-    <param name="apply_downsampling" value="false" />
-    <param name="pc_downsampling" value="0.1" />
-    <param name="apply_crop" value="true" />
-    <param name="pc_crop_dist" value="7.0" />
-    <param name="apply_outlier" value="false" />
-    <param name="pc_outlier_radius" value="0.4" />
-    <param name="pc_outlier_neighbors" value="10" />
-    <param name="ground_height_topic" value="/ground_estimator_node/ground_height" />
-    <param name="ground_alpha" value="0.8" />
-  </node>
-  
-  <node pkg="odom_to_tf" type="odom_to_tf.py" name="odom_to_tf" unless="$(arg rgbd_odom)">
-    <param name="base_link" value="$(arg base_frame_id)"/>
-    <param name="odometry_frame" value="$(arg odom_frame_id)"/>
-  </node>
-
+<node pkg="odom_to_tf" type="odom_to_tf.py" name="odom_to_tf" unless="$(arg rgbd_odom)">
+  <param name="odometry_frame" value="/odom_vo" />
+  <param name="base_frame" value="$(arg base_frame_id)" />
+</node>
   
 <!--   <node name="amcl_node" type="amcl_node" pkg="amcl_sewer" launch-prefix="xterm -e gdb - -args" > for DEBUG-->
 <node name="amcl_node" type="amcl_node" pkg="amcl_sewer" output="screen">
     <param name="rate" value="10.0" />
     <param name="base_frame_id" value="$(arg base_frame_id)" />
-    <param name="odom_frame_id" value="$(arg odom_frame_id)" />
-    <param name="global_frame_id" value="map" />
+    <param name="odom_frame_id" value="/odom_vo" />
+    <param name="global_frame_id" value="/map" />
 
     <param name="min_particles" value="$(arg min_particles)" />
     <param name="max_particles" value="$(arg max_particles)" />
-
-    <param name="angular_rate" value="0.4"/>
     
     <param name="odom_x_mod" value="$(arg odom_x_mod)" />
     <param name="odom_y_mod" value="$(arg odom_y_mod)" />
@@ -96,8 +63,8 @@
     
     <param name="resample_interval" value="0" />
     
-    <param name="update_min_d" value="0.6" />
-    <param name="update_min_a" value="0.3" />
+    <param name="update_min_d" value="0.3" />
+    <param name="update_min_a" value="0.1" />
     
     <param name="initial_x" value="$(arg initial_x)" />
     <param name="initial_y" value="$(arg initial_y)" />
@@ -111,10 +78,10 @@
     <param name="manholeThres" value="0.00075"/>
     <param name="manholeDev" value="0.4" />
     <param name="min_manhole_detected" value="2"/>
-    <param name="forkDev" value="0.35"/>
-    <param name="fork_dist" value="10.0"/>
-    <param name="angleDev" value="$(arg angleDev)"/>
-    <param name="angular_weight" value="0.2"/>
+    <param name="forkDev" value="0.5"/>
+    <param name="fork_dist" value="6.0"/>
+    <param name="angleDev" value="0.08"/>
+    <param name="angular_weight" value="2.00"/>
     
     <param name="sewer_graph_file" value="$(find sewer_graph)/test/$(arg graph_file)"/>
     
@@ -137,12 +104,11 @@
     <remap from="manhole" to="ground_truth"/>
   </node> -->
   
-  <node name="yaw_estimator" type="test_wall_detector" pkg="wall_detector" if="$(arg yaw_estimator)">
-   <param name="camera" value="/front"/>
+  <node name="yaw_estimator" type="test_wall_detector" pkg="wall_detector" if="$(arg yaw_estimator)" output="screen">
+   <param name="camera" value="$(arg camera)"/>
    <param name="link_1" value="$(arg base_frame_id)"/>
-   <param name="link_2" value="front_depth_optical_frame"/>
-   <param name="vertical_threshold" value="0.9"/>
-   <!-- <remap from="/wall_info" to="w"/> -->
+   <param name="link_2" value="$(arg camera)_depth_optical_frame"/>
+   <remap from="/wall_info" to="w"/>
   </node>
 
   <include file="$(find siar_inspection)/launch/test.launch" if="$(arg inspection)">
@@ -150,14 +116,10 @@
      <arg name="operation_mode" value="1"/>
   </include>
   
-  <node name="ground_truth" type="ground_truth.py" pkg="manhole_detector" args="$(arg camera) $(arg ground_truth) $(arg ground_truth_out) $(arg trajectory_file_python) " output="screen" >
-    <param name="base_frame_id" value="$(arg base_frame_id)" />
-
-  </node>
+  <node name="ground_truth" type="ground_truth.py" pkg="manhole_detector" args="$(arg camera) $(arg ground_truth) $(arg ground_truth_out) $(arg trajectory_file_python) " output="screen" />
   <!-- <include file="$(find siar_driver)/launch/frames_siar.launch"/> -->
   
   <node name="tf_global" type="static_transform_publisher" pkg="tf" args="0 0 0 0 0 0 map world 10"/>
-  <node name="tf_base_frame" type="static_transform_publisher" pkg="tf" args="0 0 0 0 0 0 $(arg base_frame_id) front_link 10" if="$(arg emit_tf_base)"/>
-
+  <node name="tf_base_link_vo_front_link" type="static_transform_publisher" pkg="tf" args="0 0 0 0 0 0 $(arg base_frame_id)_vo /front_link 10"/>
 
 </launch>	

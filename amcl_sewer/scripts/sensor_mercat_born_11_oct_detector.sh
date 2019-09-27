@@ -22,7 +22,7 @@ start=92
 duration=2350
 odom_a_mod=0.12
 odom_a_noise=0.04
-odom_x_mod=0.4
+odom_x_mod=0.3
 
 
 # # With yaw estimation --> yaw_estimator --> true
@@ -35,7 +35,7 @@ cd ../scripts
 cp $0 $directory_out
 until [ $CONTADOR -gt $2 ]; do
   # Roslaunch with multiple parameters
-  roslaunch amcl_sewer amcl_bag.launch play_bag:=false ground_truth:=$ground_file\
+  roslaunch amcl_sewer amcl_bag.launch angleDev:=0.06 play_bag:=false ground_truth:=$ground_file\
   ground_truth_out:=${directory_out}/stats_$CONTADOR.txt \
   trajectory_file:=${directory_out}/traj_$CONTADOR.txt \
   trajectory_file_python:=${directory_out}/traj_python_$CONTADOR.txt \
@@ -47,7 +47,7 @@ until [ $CONTADOR -gt $2 ]; do
   #end of roslaunch
   
   let pid1=$!
-    rosbag play $bag_file -s $start --clock -r 1.8 -d 5 -u $duration
+    rosbag play $bag_file -s $start --clock -r 0.9 -d 5 -u $duration
   rosnode kill -a
   wait ${pid1}
   let CONTADOR+=1
