@@ -87,6 +87,9 @@ target_link_libraries(dxf_to_sewer_graph ${PROJECT_NAME} ${LIBS})
 add_executable(get_results src/exec/get_results.cpp)
 target_link_libraries(get_results ${PROJECT_NAME} ${LIBS})
 
+add_executable(represent_local_trajectory src/exec/represent_local_trajectory.cpp)
+target_link_libraries(represent_local_trajectory ${PROJECT_NAME} ${LIBS})
+
 # Export local trajectories to kml
 add_executable(local2global src/exec/local2global.cpp)
 target_link_libraries(local2global ${PROJECT_NAME} ${LIBS})

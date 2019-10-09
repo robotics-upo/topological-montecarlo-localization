@@ -455,7 +455,7 @@ std::vector<visualization_msgs::Marker> SewerGraph::getMarkers(const std::string
   lines.color.r = 1.0;
   lines.color.g = 1.0;
   lines.color.b = 1.0;
-  lines.color.a = 0.7;
+  lines.color.a = 0.3;
   normal.color.r = 1.0;
   normal.color.g = 1.0;
   normal.color.a = 1.0;

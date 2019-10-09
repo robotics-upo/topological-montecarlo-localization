@@ -19,9 +19,9 @@ source ~/siar_ws/devel/setup.bash
 initial_x=-12.671
 initial_y=-105.37
 initial_a=-2.3
-bag_file=/media/chur/2028AD7828AD4E1A/Dataset/2017-10-11/siar_2017-10-11-11-05-03_filtered.bag
-ground_file=/media/chur/2028AD7828AD4E1A/Dataset/2017-10-11/input_vector_2017-10-11-11-05-03_ground_truth.txt
-start=92
+bag_file=/windows/Dataset/2017-10-11/siar_2017-10-11-11-05-03_filtered.bag
+ground_file=/windows/Dataset/2017-10-11/input_vector_2017-10-11-11-05-03_ground_truth.txt
+start=85
 duration=2350
 odom_a_mod=0.08
 odom_a_noise=0.04

@@ -40,23 +40,37 @@ int main(int argc, char **argv)
   rosbag::Bag bag;
   std::string camera("/up");
   if (argc < 3) {
-    cerr << "Usage: " << argv[0] << " <bag file> <input_file> [<camera_name> = \"up\"] [<skip first n images = 0>] [<max_range = 10>\n";
+    cerr << "Usage: " << argv[0] << " <bag file> <input_file> [<skip first n images = 0>] [<max_rotation>] [<rot_inc>]  [<max_range = 10>] [<camera_name> = \"up\"] \n";
     return -1;
   }
-  if (argc > 3) {
-    camera = string(argv[3]);
-    cout << "Using camera: " << camera << endl;
+
+  double rotate = 10;
+  if (argc > 4) {
+    rotate = atof(argv[4]);
   }
+
+  double inc_rot = 5;
+  if (argc > 5) {
+    inc_rot = atof(argv[5]);
+  }
+
+  cout << "Rotating " << rotate << " degrees with an increment of " << inc_rot << endl;
+
+  if (argc > 7) {
+    camera = string(argv[7]);
+    
+  }
+  cout << "Using camera: " << camera << endl;
   std::string filename(argv[2]);
   
   int ignore = -1;
-  if (argc > 4) {
-    ignore = atoi(argv[4]);
+  if (argc > 3) {
+    ignore = atoi(argv[3]);
     cout << "Ignoring ids with less than: " << ignore << endl;
   }
-  if (argc > 5) {
-    max_range = atoi(argv[4]);
-    
+
+  if (argc > 6) {
+    max_range = atoi(argv[6]);
   } else
     max_range = 10.0;
   
@@ -85,36 +99,36 @@ int main(int argc, char **argv)
     {
       sensor_msgs::CompressedImage::Ptr im = m.instantiate<sensor_msgs::CompressedImage>();
       if (im != NULL) {
-	if (m.getTopic() == rgb_topic) {
-	  int seq = im->header.seq;
-	  
-	  if (seq > ignore) {
-	    ignoring = false;
-	    
-	  } else
-	    continue;
-	  
-	  cout << "ID = " << seq << "\n";
-	  
-	  _positive = false;
-	  for (unsigned int i=0; i < M.size(); i++) {
-	    
-	    if (M[i][0] <= seq and M[i][1] >= seq) {
-	      _positive = true;
-	    }
-	  }
-	} 
-	else 
-	{
-	  if (ignoring)
-	    continue;
-	  
-	  if (_positive) {
-	    decodeAndWriteCompressed(*im, pos_depth_file, 20, 10, true); 
-	  } else {
-	    decodeAndWriteCompressed(*im, neg_depth_file, 20, 10, false);
-	  }
-	} 
+        if (m.getTopic() == rgb_topic) {
+          int seq = im->header.seq;
+          
+          if (seq > ignore) {
+            ignoring = false;
+            
+          } else
+            continue;
+          
+          cout << "ID = " << seq << "\n";
+          
+          _positive = false;
+          for (unsigned int i=0; i < M.size(); i++) {
+            
+            if (M[i][0] <= seq and M[i][1] >= seq) {
+              _positive = true;
+            }
+          }
+        } 
+        else 
+        {
+          if (ignoring)
+            continue;
+          
+          if (_positive) {
+            decodeAndWriteCompressed(*im, pos_depth_file, rotate, inc_rot, true); 
+          } else {
+            decodeAndWriteCompressed(*im, neg_depth_file, rotate, inc_rot, false);
+          }
+        } 
       }
     }
 
@@ -199,47 +213,41 @@ void decodeAndWriteCompressed(const sensor_msgs::CompressedImage& message, ofstr
                *itDepthImg = max_range;
           }
         }
-        
-        if(positive) {
-	  Mat rotated(rows, cols, CV_32FC1);
-	  for (float rot =-rotate;rot < rotate + 1.0; rot += delta_rot) {
-	    
-	    //get the affine transformation matrix
-	    Mat matRotation = getRotationMatrix2D( Point(decompressed.cols / 2, decompressed.rows / 2), rot, 1 );
-	    warpAffine( decompressed, rotated, matRotation, decompressed.size() );
-	    
-	    Mat downsample(rows/4, cols/4, CV_32FC1);
-	    cv::resize(rotated, downsample, Size(), 0.25, 0.25);
-	    
-	    writeImage(downsample, file);
-	    flip(downsample, downsample, 0);
-	    writeImage(downsample, file);
-	    flip(downsample, downsample, -1);
-	    writeImage(downsample, file);
-	    
-	    float delta = rows*0.25*0.15;
-	    for (float offset = -delta; offset < delta + 0.01;offset += delta) {
-	      if (fabs(offset) < 1e-2) 
-		continue; // Ignore the case with no translation
-	      Mat downsample(rows/4, cols/4, CV_32FC1);
+        Mat downsample(rows/4, cols/4, CV_32FC1);
 	      cv::resize(cv_ptr->image, downsample, Size(), 0.25, 0.25);
-	      Mat matT(2,3, CV_32FC1);
-	      matT.at<float>(0, 0) = matT.at<float>(1, 1) = 1.0;
-	      matT.at<float>(0,1) = matT.at<float>(1,0) = 0.0;
-	      matT.at<float>(0,2) = 0.0;
-	      matT.at<float>(1,2) = offset;
-	      
-	      
-	      warpAffine(downsample,downsample,matT,downsample.size());
-	    }
-	  }
-	}
-	else
-	{
-	  Mat downsample(rows/4, cols/4, CV_32FC1);
-	  cv::resize(cv_ptr->image, downsample, Size(), 0.25, 0.25);
-	  writeImage(downsample, file);
-	}
+        writeImage(downsample, file);
+        
+
+        if(positive) {
+          Mat rotated(rows/4, cols/4, CV_32FC1);
+          flip(downsample, rotated, 0);
+          writeImage(rotated, file);
+          flip(downsample, rotated, -1);
+          writeImage(rotated, file);
+          float delta = rows*0.25*0.125;
+          for (float offset = -delta; offset < delta + 0.01; offset += delta) {
+            if (fabs(offset) < 1e-2)
+              continue; // Ignore the case with no translation
+            Mat matT(2,3, CV_32FC1);
+            matT.at<float>(0, 0) = matT.at<float>(1, 1) = 1.0;
+            matT.at<float>(0,1) = matT.at<float>(1,0) = 0.0;
+            matT.at<float>(0,2) = 0.0;
+            matT.at<float>(1,2) = offset;
+            warpAffine(downsample,rotated,matT,downsample.size(), max_range);
+            writeImage(rotated, file);
+          }
+
+
+	        for (float rot =-rotate;rot < rotate + delta_rot; rot += delta_rot) {
+            if (fabs(rot) < 1)
+              continue;
+	          //get the affine transformation matrix
+	          Mat matRotation = getRotationMatrix2D( Point(cols/8, rows/8), rot, 1 );
+            warpAffine( downsample, rotated, matRotation, downsample.size() );
+            writeImage(rotated, file);
+            
+          }
+	      }
       }
     }
   }
@@ -256,4 +264,5 @@ void writeImage(const cv::Mat &image, ofstream &file) {
     }
     file << endl;
   }
+  file << endl;
 }

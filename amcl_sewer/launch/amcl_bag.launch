@@ -24,8 +24,8 @@
   <arg name="max_particles" default="400"/>
   <arg name="angleDev" default="0.04"/>
   <arg name="graph_file" default="gis_graph_reduced"/>
-  <arg name="base_frame_id" default="/base_link"/>
-  <arg name="odom_frame_id" default="/odom"/>
+  <arg name="base_frame_id" default="base_link"/>
+  <arg name="odom_frame_id" default="odom"/>
   <arg name="emit_tf_base" default="false"/>
   
   # Use simulation time fro TFs
@@ -40,17 +40,17 @@
   <node name="bag_player" type="play" pkg="rosbag" args="$(arg bag_file) --clock -s $(arg start) -r $(arg rate)" if="$(arg play_bag)" output="screen"/>
   
   # Uncompress images and depth
-  <node name="republish_img" type="republish" pkg="image_transport" output="screen" args="compressed in:=/$(arg camera)/rgb/image_raw raw out:=/$(arg camera)/rgb/image_raw"/>
+  <node name="republish_img" type="republish" pkg="image_transport" output="screen" args="compressed in:=/front/rgb/image_raw raw out:=/front/rgb/image_raw"/>
   <node name="republish_depth" type="republish" pkg="image_transport" output="screen" args="compressedDepth in:=/front/depth_registered/image_raw raw out:=/front/depth_registered/image_raw"/>
   <node name="republish_depth_2" type="republish" pkg="image_transport" output="screen" args="compressedDepth in:=/up/depth_registered/image_raw raw out:=/up/depth_registered/image_raw"/>
     
   # Launch RGB-D odom
-  <node name="rgbd_odom_node" type="rgbd_odom_node" pkg="rgbd_odom" if="$(arg rgbd_odom)" >
-    <param name="camera_topic" value="$(arg camera)" />
+  <node name="rgbd_odom_node" type="rgbd_odom_node" pkg="rgbd_odom" if="$(arg rgbd_odom)" output="screen">
+    <param name="camera_topic" value="/front" />
     <param name="tf_topic_out" value="/rgbd_odom/transform" />
-    <param name="max_features" value="800" />
+    <param name="max_features" value="1000" />
     <param name="flow_threshold" value="10" />
-    <param name="min_matches" value="15" />
+    <param name="min_matches" value="50" />
     <param name="odom_frame_id" value="$(arg odom_frame_id)" />
     <param name="base_frame_id" value="$(arg base_frame_id)" />
     <param name="publish_image" value="true" />
@@ -78,11 +78,12 @@
 
   
 <!--   <node name="amcl_node" type="amcl_node" pkg="amcl_sewer" launch-prefix="xterm -e gdb - -args" > for DEBUG-->
-<node name="amcl_node" type="amcl_node" pkg="amcl_sewer" output="screen">
+<node name="amcl_node" type="amcl_node" pkg="amcl_sewer">
     <param name="rate" value="10.0" />
     <param name="base_frame_id" value="$(arg base_frame_id)" />
     <param name="odom_frame_id" value="$(arg odom_frame_id)" />
     <param name="global_frame_id" value="map" />
+    <param name="fused" value="false"/>
 
     <param name="min_particles" value="$(arg min_particles)" />
     <param name="max_particles" value="$(arg max_particles)" />
@@ -137,13 +138,12 @@
     <remap from="manhole" to="ground_truth"/>
   </node> -->
   
-  <node name="yaw_estimator" type="test_wall_detector" pkg="wall_detector" if="$(arg yaw_estimator)">
+  <!-- <node name="yaw_estimator" type="test_wall_detector" pkg="wall_detector" if="$(arg yaw_estimator)">
    <param name="camera" value="/front"/>
    <param name="link_1" value="$(arg base_frame_id)"/>
    <param name="link_2" value="front_depth_optical_frame"/>
    <param name="vertical_threshold" value="0.9"/>
-   <!-- <remap from="/wall_info" to="w"/> -->
-  </node>
+  </node> -->
 
   <include file="$(find siar_inspection)/launch/test.launch" if="$(arg inspection)">
      <arg name="use_bag" value="false"/>

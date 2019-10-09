@@ -111,7 +111,6 @@
     <remap from="/amcl_sewer_node/initial_pose" to="/initialpose"/>
     
     <param name="initialize" value="true"/>
-    
     <param name="traj_file" value="$(arg trajectory_file)"/>
     
   </node>

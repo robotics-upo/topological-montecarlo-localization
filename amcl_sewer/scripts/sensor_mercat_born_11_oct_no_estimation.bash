@@ -19,8 +19,8 @@ source ~/siar_ws/devel/setup.bash
 initial_x=-12.671
 initial_y=-105.37
 initial_a=-2.3
-bag_file=/media/chur/2028AD7828AD4E1A/Dataset/2017-10-11/siar_2017-10-11-11-05-03_filtered.bag
-ground_file=/media/chur/2028AD7828AD4E1A/Dataset/2017-10-11/input_vector_2017-10-11-11-05-03_ground_truth.txt
+bag_file=/windows/Dataset/2017-10-11/siar_2017-10-11-11-05-03_filtered.bag
+ground_file=/windows/Dataset/2017-10-11/input_vector_2017-10-11-11-05-03_ground_truth.txt
 start=92
 duration=2350
 odom_a_mod=0.12
@@ -30,7 +30,7 @@ odom_x_mod=0.4
 
 # # With yaw estimation --> yaw_estimator --> true
 CONTADOR=$1
-directory_out=/home/chur/Dataset/2017-10-11/no_estimation
+directory_out=/windows/Dataset/2017-10-11/no_estimation
 mkdir -p $directory_out
 roscd amcl_sewer/launch
 cp amcl_bag.launch $directory_out

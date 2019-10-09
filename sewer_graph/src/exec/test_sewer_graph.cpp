@@ -37,22 +37,27 @@ int main(int argc, char ** argv) {
   
   ros::init(argc, argv, "test_sewer");
   ros::NodeHandle nh;
+  ros::NodeHandle lnh("~");
   
   ros::Publisher marker_pub = nh.advertise<visualization_msgs::Marker>("visualization_marker", 10);
   ros::Publisher gps_pub = nh.advertise<sensor_msgs::NavSatFix>("/gps/fix", 2, true);
   gps_pub.publish(g.getReferencePosition());
+
+  string global_frame;
+  if (!lnh.getParam("global_frame_id",global_frame)) {
+    global_frame = "map";
+  }
   
   ROS_INFO("Publishing markers");
   while (ros::ok()) {
-    std::vector<visualization_msgs::Marker> vec = g.getMarkers("/map");
-    
+    std::vector<visualization_msgs::Marker> vec = g.getMarkers(global_frame);
     for (unsigned int i = 0; i < vec.size(); i++) {
       marker_pub.publish(vec.at(i));
     }
     ros::spinOnce();
+    gps_pub.publish(g.getReferencePosition());
     sleep(1);
   }
-  
   
   return 0;
 }
