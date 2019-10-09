@@ -12,7 +12,6 @@ find_package(catkin REQUIRED COMPONENTS
   gmapping
   roscpp
   rospy
-  slam_gmapping
 )
 
 ## System dependencies are found with CMake's conventions

@@ -53,17 +53,14 @@
   <build_depend>gmapping</build_depend>
   <build_depend>roscpp</build_depend>
   <build_depend>rospy</build_depend>
-  <build_depend>slam_gmapping</build_depend>
   <build_export_depend>amcl_sewer</build_export_depend>
   <build_export_depend>gmapping</build_export_depend>
   <build_export_depend>roscpp</build_export_depend>
   <build_export_depend>rospy</build_export_depend>
-  <build_export_depend>slam_gmapping</build_export_depend>
   <exec_depend>amcl_sewer</exec_depend>
   <exec_depend>gmapping</exec_depend>
   <exec_depend>roscpp</exec_depend>
   <exec_depend>rospy</exec_depend>
-  <exec_depend>slam_gmapping</exec_depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->
