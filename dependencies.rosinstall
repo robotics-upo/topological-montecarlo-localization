@@ -1,0 +1,5 @@
+- git: {local-name: functions, 'git@github.com:robotics-upo/functions.git'}
+- git: {local-name: rviz_satellite, 'git@github.com:robotics-upo/rviz_satellite.git'}
+- git: {local-name: plane_detector, 'git@github.com:robotics-upo/plane_detector.git'}
+
+
