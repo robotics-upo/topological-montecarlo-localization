@@ -7,32 +7,32 @@
 CONTADOR=$1
 orig_folder=$PWD
 
-if [ $# -ne 2 ]; then
-  echo "Usage: $0 <first_exe_number> <last_exe_number>"
+if [ $# -lt 3 ]; then
+  echo "Usage: $0 <first_exe_number> <last_exe_number> <path_to_ros_setup_bash> [<path_to_dataset>]"
   exit 1
 fi
+
+DATE_BAG=2017-10-11-11-05-03
+
+bag_file=$4/siar_${DATE_BAG}.bag
+ground_file=$4/input_vector_DATE_BAG.txt
+directory_out=$4/output/${DATE_BAG}/detector
+
+source $3
 
 # Initial Parameters_11_oct 
 initial_x=-12.671
 initial_y=-105.37
 initial_a=-2.3
-bag_file=/windows/Dataset/2017-10-11/siar_2017-10-11-11-05-03_filtered.bag
-ground_file=/windows/Dataset/2017-10-11/input_vector_2017-10-11-11-05-03_ground_truth.txt
 start=92
 duration=2350
 odom_a_mod=0.12
 odom_a_noise=0.04
 odom_x_mod=0.3
 
-
 # # With yaw estimation --> yaw_estimator --> true
 CONTADOR=$1
-directory_out=/home/chur/Dataset/2017-10-11/detector
 mkdir -p $directory_out
-cd /home/chur/siar_ws/src/topological-montecarlo-localization/amcl_sewer/launch
-cp amcl_bag_ground_truth.launch $directory_out
-cd ../scripts
-cp $0 $directory_out
 until [ $CONTADOR -gt $2 ]; do
   # Roslaunch with multiple parameters
   roslaunch amcl_sewer amcl_bag.launch angleDev:=0.06 play_bag:=false ground_truth:=$ground_file\

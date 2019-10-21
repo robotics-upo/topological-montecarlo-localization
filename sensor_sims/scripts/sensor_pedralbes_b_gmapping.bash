@@ -8,21 +8,25 @@
 CONTADOR=$1
 orig_folder=$PWD
 
-if [ $# -ne 2 ]; then
-  echo "Usage: $0 <first_exe_number> <last_exe_number>"
+
+if [ $# -lt 3 ]; then
+  echo "Usage: $0 <first_exe_number> <last_exe_number> <path_to_ros_setup_bash> [<path_to_dataset>]"
   exit 1
 fi
 
-source ~/siar_ws/devel/setup.bash
+DATE_BAG=2018-06-12-10-54-51
+
+bag_file=$4/siar_${DATE_BAG}.bag
+ground_file=$4/input_vector_DATE_BAG.txt
+directory_out=$4/output/${DATE_BAG}/montecarlo
+
+source $3
 
 # Initial Parameters_11_oct 
 initial_x=96.24 #Initial position (start 980)
 initial_y=-182.72
 initial_a=2.47
  
-bag_file=/windows/Dataset/2018-06-12_sewers_pedralbes/siar_2018-06-12-10-54-51_short_filtered.bag
-ground_file=/windows/Dataset/2018-06-12_sewers_pedralbes/input_vector_ground_truth_b.txt
-directory_out=/home/chur/Dataset/pedralbres/gmapping
 mkdir -p $directory_out
 start=0
 duration=2005
@@ -32,10 +36,6 @@ odom_x_mod=0.2
 
 # # With yaw estimation --> yaw_estimator --> true
 CONTADOR=$1
-roscd sensor_sims/launch
-cp gmapping_bag.launch $directory_out
-cd ../scripts
-cp $0 $directory_out
 until [ $CONTADOR -gt $2 ]; do
   # Roslaunch with multiple parameters
   roslaunch sensor_sims gmapping_bag.launch play_bag:=false ground_truth:=$ground_file\
@@ -49,7 +49,7 @@ until [ $CONTADOR -gt $2 ]; do
   #end of roslaunch
   
   let pid1=$!
-  rosbag play $bag_file -s $start --clock -r 1.5 -d 2 -u $duration
+  rosbag play $bag_file -s $start --clock -r 1 -d 2 -u $duration
   rosnode kill -a
   wait ${pid1}
   let CONTADOR+=1
