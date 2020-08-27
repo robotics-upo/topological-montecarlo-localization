@@ -18,7 +18,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   sensor_msgs
   geometry_msgs
-  pcl_conversions 
+  pcl_conversions
   pcl_ros
   sewer_graph
   simple_graph
@@ -84,3 +84,5 @@ target_link_libraries(amcl_node
    ${catkin_LIBRARIES}
    ${GSL_LIBRARIES}
 )
+
+# set(CMAKE_EXE_LINKER_FLAGS -pg)
