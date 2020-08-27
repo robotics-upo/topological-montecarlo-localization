@@ -3,6 +3,9 @@
 
 #include "particlefilter_sewer.hpp"
 #include "std_msgs/Int8.h"
+#include <functions/SimpleProfiler.hpp>
+#define PF_PROFILE
+  
 
 //Class definition
 class ParticleFilterFused:public ParticleFilter
@@ -103,7 +106,14 @@ public:
     }
 
     if (m_doUpdate) {
+#ifdef PF_PROFILE
+      // static functions::SimpleProfiler pro("update_pf.profile.txt");
+      // auto f_ = std::bind(&ParticleFilterFused::update, this, checkManhole());
+      // pro.profileFunction<void>(f_);
+      PROFILE_METHOD_1("update_pf.profile.txt", ParticleFilterFused, update, void, checkManhole()); 
+#else
       update(checkManhole());
+#endif
     } 
 
     return false;

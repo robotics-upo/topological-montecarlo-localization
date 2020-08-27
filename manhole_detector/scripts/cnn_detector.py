@@ -14,8 +14,13 @@ from cv_bridge import CvBridge, CvBridgeError
 import cv2
 from visualization_msgs.msg import Marker
 
+# Profiling
+from profilehooks import profile
+
+
 class CNNDetector:    
 
+  @profile
   def depth_callback(self, img):
     bool_msg = Bool(False)
     depth_image = self.bridge.imgmsg_to_cv2(img, '32FC1')
@@ -39,7 +44,7 @@ class CNNDetector:
     if y[0,0]>= self.thres:
       bool_msg.data = True
       marker = Marker()
-      marker.header.frame_id = "/base_link"
+      marker.header.frame_id = base_frame_id
       marker.header.stamp = rospy.Time.now()
 
       marker.type = marker.CYLINDER
@@ -77,6 +82,7 @@ class CNNDetector:
     self.bool_pub = rospy.Publisher('manhole',Bool, queue_size=2)
     self.manhole_pub = rospy.Publisher('manhole_marker', Marker, queue_size = 10)
     self.thres = 0.5
+    self.base_frame_id = 'base_link'
     
     
     
@@ -92,6 +98,10 @@ if __name__ == '__main__':
     if rospy.has_param('~thres'):
       detector.thres = rospy.get_param('~thres')
       print "New threshold: %f"%detector.thres
+      
+    if rospy.has_param('base_frame_id'):
+          detector.base_frame_id = rospy.get_param('base_frame_id')
+    print "Base frame id: ", detector.base_frame_id
     # Spin until ctrl + c
     rospy.spin()
   else:

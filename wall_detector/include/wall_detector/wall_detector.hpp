@@ -11,6 +11,9 @@
 #include <visualization_msgs/Marker.h> 
 #include <wall_detector/WallInfo.h>
 
+#define WALL_PROFILE
+#include <functions/SimpleProfiler.hpp>
+
 //! @brief Detects the floor plane and its neighbors and classifies them according to the height with respect to the floor.
 //! @brief It assumes that the camera has been calibrated with respect to the robot.
 class WallDetector:public PlaneDetectorROS {
@@ -256,7 +259,15 @@ void WallDetector::infoCallback_1(const sensor_msgs::CameraInfoConstPtr& info)
 void WallDetector::imgCallback_1(const sensor_msgs::ImageConstPtr& img)
 {
   // Detecting planes with respect to the camera
-  detectWalls(*img);
+#ifdef WALL_PROFILE
+      static functions::SimpleProfiler pro("wall_detect.profile.txt");
+      auto f_ = std::bind(&WallDetector::detectWalls, this, *img);
+      pro.profileFunction<void>(f_);
+#else
+      detectWalls(*img);
+#endif
+
+  
 }
 
 
