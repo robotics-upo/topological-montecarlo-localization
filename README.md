@@ -2,7 +2,7 @@
 
 This metapackage contains most of the development for localization of the SIAR platform inside a sewer network. 
 
-This localization system has been submitted to the Sensor journal in the submission entitle "A robust localization system for inspection robots in sewer networks ", by D. Alejo, F. Caballero and L. Merino
+This localization system has been published in the Sensor journal in the submission entitle "A robust localization system for inspection robots in sewer networks ", by D. Alejo, F. Caballero and L. Merino. https://www.mdpi.com/1424-8220/19/22/4946
 
 ## Running the experiments
 
