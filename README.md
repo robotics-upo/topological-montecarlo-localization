@@ -2,11 +2,11 @@
 
 This metapackage contains most of the development for localization of the SIAR platform inside a sewer network. 
 
-This localization system has been published in the Sensor journal in the submission entitle "A robust localization system for inspection robots in sewer networks ", by D. Alejo, F. Caballero and L. Merino. https://www.mdpi.com/1424-8220/19/22/4946
+This localization system has been published in "A robust localization system for inspection robots in sewer networks ", by D. Alejo, F. Caballero and L. Merino. In the Sensors MDPI journal, 2019.  https://www.mdpi.com/1424-8220/19/22/4946
 
 ## Running the experiments
 
-We include the ROS package "sensor_sims" that contains the scripts for automatically reproduce the results presented in the paper.
+We include the ROS package "sensor_sims" that contains the scripts for automatically reproduce the results presented in the paper. You can find a bash script for downloading the ROSBag files gathered in the experiments and then, there is one script for each experiment.
 
 ## Composition
 
