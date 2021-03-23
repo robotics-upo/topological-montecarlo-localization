@@ -4,11 +4,11 @@
 #include <sensor_msgs/CompressedImage.h>
 #include <sensor_msgs/image_encodings.h>
 #include <cv_bridge/cv_bridge.h>
-#include <opencv/cvwimage.h>
-#include <opencv/highgui.h>
+// #include <opencv/cvwimage.h>
+// #include <opencv/highgui.h>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/opencv.hpp>
-#include <cv.h>
+// #include <cv.h>
 #include <boost/foreach.hpp>
 #ifndef foreach
 #define foreach BOOST_FOREACH
