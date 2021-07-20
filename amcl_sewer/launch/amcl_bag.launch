@@ -37,7 +37,9 @@
   <arg name="trajectory_file" default="$(find amcl_sewer)/traj.txt"/>
 
   # Bag file
-  <node name="bag_player" type="play" pkg="rosbag" args="$(arg bag_file) --clock -s $(arg start) -r $(arg rate)" if="$(arg play_bag)" output="screen"/>
+  <node name="bag_player" type="play" pkg="rosbag" args="$(arg bag_file) --clock -s $(arg start) -r $(arg rate)" if="$(arg play_bag)" output="screen">
+    <remap from="/tf" to ="/tf_unused"/>
+  </node>
   
   # Uncompress images and depth
   <node name="republish_img" type="republish" pkg="image_transport" output="screen" args="compressed in:=/front/rgb/image_raw raw out:=/front/rgb/image_raw"/>

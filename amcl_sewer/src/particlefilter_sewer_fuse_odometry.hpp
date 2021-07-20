@@ -175,6 +175,7 @@ private:
     // Publish particles
     publishParticles();
     m_posecovPub.publish(m_lastPoseCov);
+    publishGPS();
   }
 
   //!This function implements the PF prediction stage. Translation in X, Y and Z

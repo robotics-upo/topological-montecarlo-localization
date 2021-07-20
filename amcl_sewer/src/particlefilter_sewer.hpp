@@ -203,6 +203,7 @@ public:
     m_posecovPub = m_nh.advertise<geometry_msgs::PoseWithCovarianceStamped>(node_name+"/estimated_pose", 1, true);
     m_graphPub = m_nh.advertise<visualization_msgs::Marker>(node_name+"/sewer_graph", 0, true);
     m_gpsPub = m_nh.advertise<sensor_msgs::NavSatFix>("/gps/fix", 2, true);
+    m_gpsPub2 = m_nh.advertise<sensor_msgs::NavSatFix>("/gps/ugv_pos", 2, true);
   }
 
 
@@ -470,6 +471,20 @@ protected:
     // Publish particles
     publishParticles();
     m_posecovPub.publish(m_lastPoseCov);
+    publishGPS();
+  }
+  void publishGPS() {
+    // Pusblish GPS position
+    auto gps_p = s_g->getVertexContent(0).e;
+    std::vector<double> p;
+    p.push_back(m_lastPoseCov.pose.pose.position.x);
+    p.push_back(m_lastPoseCov.pose.pose.position.y);
+    gps_p.fromRelative(p, s_g->getVertexContent(0).e);
+    sensor_msgs::NavSatFix nsf;
+    nsf.latitude = gps_p.getLatitude();
+    nsf.longitude = gps_p.getLongitude();
+    nsf.header = m_lastPoseCov.header;
+    m_gpsPub2.publish(nsf);
   }
 
   //!This function implements the PF prediction stage. Translation in X, Y and Z
@@ -852,7 +867,7 @@ protected:
   tf::TransformBroadcaster m_tfBr;
   tf::TransformListener m_tfListener;
   ros::Subscriber m_detect_manhole_Sub, m_initialPoseSub, m_odomTfSub, m_wall_info_sub, m_ground_sub;
-  ros::Publisher m_posesPub, m_graphPub, m_gpsPub, m_posecovPub;
+  ros::Publisher m_posesPub, m_graphPub, m_gpsPub, m_gpsPub2, m_posecovPub;
   ros::Timer updateTimer;
 
   // Sewer stuff
