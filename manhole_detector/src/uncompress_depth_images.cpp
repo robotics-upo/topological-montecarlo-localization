@@ -46,7 +46,7 @@ int main(int argc, char **argv)
   
   ros::NodeHandle nh;
   std::string compressed_topic = camera + "/depth_registered/image_raw/compressedDepth";
-  std::string uncompressed_topic = camera + "/rgb/image_raw/compressed";
+  std::string uncompressed_topic = camera + "/depth_registered/image_raw";
   ros::Subscriber compressed_image_sub = nh.subscribe(compressed_topic, 1, &compressedImageCb);
 
   image_pub = nh.advertise<sensor_msgs::Image>(uncompressed_topic, 1);
@@ -104,16 +104,14 @@ void decodeAndEmit(const sensor_msgs::CompressedImage& message)
 
       if ((rows > 0) && (cols > 0))
       {
-        cv_ptr->image = Mat(rows, cols, CV_32FC1);
+        // cv_ptr->image = Mat(rows, cols, CV_32FC1);
         
-        sensor_msgs::Image img;
         cv_bridge::CvImage img_bridge;
         img_bridge.image = decompressed;
         img_bridge.encoding = cv_ptr->encoding;
         img_bridge.header = message.header;
-        img_bridge.toImageMsg(img);
 
-        image_pub.publish(img);
+        image_pub.publish(img_bridge.toImageMsg());
       }
     }
   }
