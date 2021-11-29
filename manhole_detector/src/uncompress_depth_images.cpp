@@ -27,6 +27,8 @@ ros::Publisher image_pub;
 int main(int argc, char **argv) 
 {
   std::string camera("/up");
+
+  ros::init(argc, argv, "test_plane_marker");
   
   cout << "Usage: " << argv[0] << " [<camera_name> = \"up\"] [<max_range> = 10] \n";
 
