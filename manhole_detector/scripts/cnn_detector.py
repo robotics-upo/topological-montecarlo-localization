@@ -30,10 +30,10 @@ class CNNDetector:
       for j_ in range(0,79):
         if (np.isnan(depth_image[i_*4,j_*4])):
           #print "NAN"
-          self.down_image[0,0,i_,j_] = 10.0;
+          self.down_image[0,0,i_,j_] = 10.0
         else:
           #print depth_image[i_*4, j_*4]
-          self.down_image[0,0,i_,j_] = np.real(depth_image[i_*4,j_*4]);
+          self.down_image[0,0,i_,j_] = np.real(depth_image[i_*4,j_*4])
           
     y = self.model.predict(self.down_image)
     print y
@@ -44,7 +44,7 @@ class CNNDetector:
     if y[0,0]>= self.thres:
       bool_msg.data = True
       marker = Marker()
-      marker.header.frame_id = base_frame_id
+      marker.header.frame_id = self.base_frame_id
       marker.header.stamp = rospy.Time.now()
 
       marker.type = marker.CYLINDER
@@ -88,8 +88,8 @@ class CNNDetector:
     
   def load_cnn(self, filename):
     self.model = load_model(filename)
-    print "Loaded_model"
-    print self.model.summary()
+    print ("Loaded_model")
+    print (self.model.summary())
       
 if __name__ == '__main__':
   if len(sys.argv) > 2:
@@ -97,13 +97,14 @@ if __name__ == '__main__':
     detector = CNNDetector(sys.argv[1], sys.argv[2])
     if rospy.has_param('~thres'):
       detector.thres = rospy.get_param('~thres')
-      print "New threshold: %f"%detector.thres
+      
+    print ("Threshold of the detector: %f"%detector.thres)
       
     if rospy.has_param('base_frame_id'):
           detector.base_frame_id = rospy.get_param('base_frame_id')
-    print "Base frame id: ", detector.base_frame_id
+    print( "Base frame id: ", detector.base_frame_id)
     # Spin until ctrl + c
     rospy.spin()
   else:
-    print "usage: %s <camera> <cnn_file>" % sys.argv[0]
+    print ("usage: %s <camera> <cnn_file>" % sys.argv[0])
     sys.exit()
