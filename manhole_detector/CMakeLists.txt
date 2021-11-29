@@ -57,11 +57,17 @@ include_directories(
 
 ## Declare a C++ executable
 add_executable(generate_dataset src/generate_dataset_learning.cpp)
+add_executable(uncompress_depth_images src/uncompress_depth_images.cpp)
 
 add_dependencies(generate_dataset ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(uncompress_depth_images ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(generate_dataset
+  ${catkin_LIBRARIES}  ${Boost_LIBRARIES}
+)
+
+target_link_libraries(uncompress_depth_images
   ${catkin_LIBRARIES}  ${Boost_LIBRARIES}
 )
 
