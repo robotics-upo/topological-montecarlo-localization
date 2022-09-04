@@ -67,7 +67,7 @@ target_link_libraries(generate_dataset
   ${catkin_LIBRARIES}  ${Boost_LIBRARIES}
 )
 
-target_link_libraries(uncompress_depth_images
+target_link_libraries(uncompress_depth_images 
   ${catkin_LIBRARIES}  ${Boost_LIBRARIES}
 )
 
